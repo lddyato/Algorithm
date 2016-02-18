@@ -20,27 +20,20 @@ class Solution(object):
     '''算法思路：
 
     也是先排序，然后两边加逼。
-
-    这类题型可以看成是 固定 i 和 low, 移动 high 找出符合条件的结果，然后再移动 low、i
-    继续寻找
     '''
     def threeSumSmaller(self, nums, target):
-        maps, i, result = sorted(enumerate(nums), key=lambda n: n[1]), 0, 0
-
-        while i < len(nums) - 2:
-            low, high = i + 1, len(nums) - 1
-
-            while low < high:
-                s = maps[i][1] + maps[low][1] + maps[high][1]
-                if s < target:
-                    result += high - low
-                    low += 1
+        nums, n, r = sorted(nums), len(nums), 0
+        for i, num in enumerate(nums):
+            j, k, t = i + 1, n - 1, target - num
+            while j < k:
+                sum = nums[j] + nums[k]
+                if sum < t:
+                    r += k - j
+                    j += 1
                 else:
-                    high -= 1
+                    k -= 1
+        return r
 
-            i += 1
-
-        return result
 
 s = Solution()
 print s.threeSumSmaller([-2, 0, 1, 3], 4)

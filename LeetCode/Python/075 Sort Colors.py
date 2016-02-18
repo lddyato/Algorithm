@@ -16,22 +16,21 @@ You are not suppose to use the library's sort function for this problem.
 '''
 
 
+import collections
+
+
 class Solution(object):
     '''算法思路：
 
     计数排序，适用于 数的大小范围 < 100 的这种情况
     '''
     def sortColors(self, nums):
-        record = [0] * 3
-        for n in nums:
-            record[n] += 1
+        counter = collections.Counter(nums)
 
         s = 0
-        for i in xrange(len(record)):
-            for j in xrange(record[i]):
-                nums[s] = i
-                j += 1
-                s += 1
+        for i in xrange(3):
+            nums[s:s + counter[i]] = [i] * counter[i]
+            s += counter[i]
 
 
 class Solution(object):

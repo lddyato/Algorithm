@@ -115,6 +115,9 @@ class TwoSum(object):
         return False
 
 
+import collections
+
+
 class TwoSum(object):
     '''
     维护一个 {value: count} 的 hash, 直接遍历查询
@@ -127,21 +130,21 @@ class TwoSum(object):
 
     结果：Accepted
 
-    结论：能用 hash 的时候尽量用 hash
+    结论: 看到一个不过的测试用例，多半是 add 操作，find 操作相对来说比较少，因此这种
+    写法会 AC
     '''
     def __init__(self):
-        self.nums = {}
+        self.record = collections.defaultdict(int)
 
     def add(self, number):
-        self.nums[number] = self.nums.setdefault(number, 0) + 1
+        self.record[number] += 1
 
     def find(self, value):
-        nums = self.nums
-        for n in nums:
-            left = value - n
-            if left in nums and ((n == left and nums[n] > 1) or (n != left)):
+        r = self.record
+        for num in r:
+            left = value - num
+            if left != num and left in r or left == num and r[num] > 1:
                 return True
-
         return False
 
 

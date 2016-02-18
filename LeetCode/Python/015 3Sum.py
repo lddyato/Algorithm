@@ -29,35 +29,23 @@ class Solution(object):
 
     复杂度: O(n^2)
     '''
-
     def threeSum(self, nums):
-        maps = {}
-        for n in nums:
-            maps[n] = maps.setdefault(n, 0) + 1
+        r, visited = set(), set()
+        for i, target in enumerate(nums):
+            if target in visited:
+                continue
 
-        _ = set()
-        for i, n in enumerate(nums):
-            target = -n
-            results = set()
-
-            maps[n] -= 1
-            for j, _n in enumerate(nums):
-                if j == i:
+            record = set()
+            for j, num in enumerate(nums):
+                if i == j:
                     continue
 
-                left = target - _n
-                if maps.get(left, 0) > 0:
-                    if _n == left and maps[_n] > 1:
-                        results.add((_n, left))
-
-                    if _n != left:
-                        results.add((_n, left) if _n < left else (left, _n))
-            maps[n] += 1
-
-            if results:
-                _ |= set(map(lambda i: tuple(sorted(i + (n,))), results))
-
-        return list(_)
+                left = -target - num
+                if left in record:
+                    r.add(tuple(sorted([target, left, num])))
+                record.add(num)
+            visited.add(target)
+        return list(r)
 
 
 class Solution(object):
@@ -85,6 +73,34 @@ class Solution(object):
             i += 1
 
         return list(results)
+
+
+class Solution(object):
+    '''算法思路：
+
+    同上，不过这次却巧妙去重
+    '''
+    def threeSum(self, nums):
+        nums, n, r = sorted(nums), len(nums), []
+        for i, target in enumerate(nums):
+            if i and nums[i - 1] == target:
+                continue
+
+            j, k = i + 1, n - 1
+            while j < k:
+                sum = nums[j] + nums[k]
+                if sum > -target:
+                    k -= 1
+                elif sum < -target:
+                    j += 1
+                else:
+                    r.append([target, nums[j], nums[k]])
+                    while j < k and nums[j + 1] == nums[j]:
+                        j += 1
+                    while j < k and nums[k - 1] == nums[k]:
+                        k -= 1
+                    j += 1
+        return r
 
 
 s = Solution()

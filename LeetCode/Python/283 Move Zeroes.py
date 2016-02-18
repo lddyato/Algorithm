@@ -65,7 +65,7 @@ class Solution(object):
 
 
 class Solution(object):
-    '''算法思路：
+        '''算法思路：
 
     从前往后，遇到非0数字就往前靠（不是交换，而是赋值），最后剩余的填充为0
 
@@ -74,20 +74,12 @@ class Solution(object):
     Time: O(n)
     '''
     def moveZeroes(self, nums):
-        zeroStart = 0
-        while zeroStart < len(nums) and nums[zeroStart]:
-            zeroStart += 1
-
-        i = zeroStart + 1
-        while i < len(nums):
-            if nums[i]:
-                nums[zeroStart] = nums[i]
-                zeroStart += 1
-            i += 1
-
-        while zeroStart < len(nums):
-            nums[zeroStart] = 0
-            zeroStart += 1
+        tail = 0
+        for i, num in enumerate(nums):
+            if num:
+                nums[tail] = num
+                tail += 1
+        nums[tail:] = [0] * (len(nums) - tail)
 
 
 class Solution(object):
@@ -104,7 +96,6 @@ class Solution(object):
                 nums[i], nums[j] = nums[j], nums[i]
                 j += 1
             i += 1
-
 
 class Solution(object):
     '''算法思路：

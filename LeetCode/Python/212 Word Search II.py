@@ -55,12 +55,11 @@ class Solution(object):
         if not (char and char in root.children):
             return
 
-        board[i][j] = None
-        root, oldRoot = root.children[char], root
+        board[i][j], root = None, root.children[char]
 
         if root.word:
             r.append(root.word)
-            del oldRoot.children[char]
+            root.word = None
 
         for x, y in ((0, -1), (-1, 0), (0, 1), (1, 0)):
             ii, jj = i + x, j + y

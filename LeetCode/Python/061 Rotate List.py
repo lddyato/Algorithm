@@ -27,31 +27,18 @@ class Solution(object):
     - k > length of list
     - list 为空
     '''
-    def get_k(self, head, k):
-        length, current = 0, head
-        while current:
-            length += 1
-            current = current.next
-
-        return length and k % length or k
-
     def rotateRight(self, head, k):
-        k = self.get_k(head, k)
-
-        n, pre, pivot, current, tail = 0, None, None, head, None
+        n, pre, current = 0, None, head
         while current:
+            pre, current = current, current.next
             n += 1
 
-            if k and n - k >= 0:
-                pre, pivot = pivot, pivot and pivot.next or head
+        if not n or not k % n:
+            return head
 
-            if not current.next:
-                tail = current
+        tail, k = head, k % n
+        for _ in xrange(n - k - 1):
+            tail = tail.next
 
-            current = current.next
-
-        if pre:
-            pre.next = None
-            tail.next = head
-
-        return pivot or head
+        next, tail.next, pre.next = tail.next, None, head
+        return next

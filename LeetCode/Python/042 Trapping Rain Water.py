@@ -20,20 +20,20 @@ class Solution(object):
     最高的，这时反过来查找另一个半，最后把所有 trap 的和相加起来即为所求
     '''
     def trap(self, height):
-        i, result, length = 0, 0, len(height)
-        while i < length - 2:
-            j, s = i + 1, 0
-            while j < length and height[j] < height[i]:
-                s += height[j]
-                j += 1
+        low, water, n = 0, 0, len(height)
+        while low < n - 2:
+            high, s = low + 1, 0
+            while high < n and height[high] < height[low]:
+                s += height[high]
+                high += 1
 
-            if j == length:
-                return result + self.trap(height[i:][::-1])
+            if high == n:
+                return water + self.trap(height[low:][::-1])
 
-            result += (j - i - 1) * height[i] - s
-            i = j
+            water += (high - low - 1) * height[low] - s
+            low = high
 
-        return result
+        return water
 
 
 s = Solution()

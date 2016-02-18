@@ -20,26 +20,26 @@ class Solution(object):
     先排序，然后两边加逼
     '''
     def threeSumClosest(self, nums, target):
-        nums, i, m = sorted(nums), 0, None
+        nums, n, minDistance, r = sorted(nums), len(nums), float('inf'), 0
 
-        while i < len(nums) - 2:
-            low, high = i + 1, len(nums) - 1
+        for i in xrange(n):
+            j, k = i + 1, n - 1
+            while j < k:
+                sum = nums[i] + nums[j] + nums[k]
+                distance = abs(sum - target)
 
-            while low < high:
-                s = nums[i] + nums[low] + nums[high]
-                distince = abs(target - s)
+                if distance < minDistance:
+                    minDistance = distance
+                    r = sum
 
-                if m is None or distince < m:
-                    m = distince
-                    result = s
-
-                if s < target:
-                    low += 1
+                if sum < target:
+                    j += 1
+                elif sum > target:
+                    k -= 1
                 else:
-                    high -= 1
+                    return target
+        return r
 
-            i += 1
-        return result
 
 s = Solution()
 print s.threeSumClosest([1, 2, 4, 8, 16, 32, 64, 128], 82)

@@ -33,35 +33,22 @@ class Solution(object):
 
     需要特别注意的一个地方是：push 时一定要将 node.next 置为 Node，不然有可能会出现
     死循环
+
+    注意哑节点的技巧
     '''
-    def addNode(self, head, tail, node):
-        node.next = None
-
-        if not head:
-            head = tail = node
-        else:
-            tail.next = node
-            tail = node
-
-        return head, tail
-
     def partition(self, head, x):
-        lessHead = lessTail = greaterHead = greaterTail = None
+        dummyLHead = dummyLTail = ListNode(0)
+        dummyGHead = dummyGTail = ListNode(0)
 
         while head:
-            node, head = head, head.next
-
-            if node.val < x:
-                lessHead, lessTail = self.addNode(lessHead, lessTail, node)
+            if head.val < x:
+                dummyLTail.next, dummyLTail = head, head
             else:
-                greaterHead, greaterTail = self.addNode(
-                    greaterHead, greaterTail, node)
+                dummyGTail.next, dummyGTail = head, head
+            head = head.next
 
-        if not lessHead:
-            return greaterHead
-
-        lessTail.next = greaterHead
-        return lessHead
+        dummyLTail.next, dummyGTail.next = dummyGHead.next, None
+        return dummyLHead.next
 
 
 a = ListNode(2)

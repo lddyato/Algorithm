@@ -26,7 +26,6 @@ class Solution(object):
 
     这个题的一个坑是：不能只计算 length 而不改变 nums
     '''
-
     def removeDuplicates(self, nums):
         i = 0
 
@@ -39,6 +38,21 @@ class Solution(object):
             i = j
 
         return len(nums)
+
+
+class Solution(object):
+    '''算法思路：
+
+    不需改变数组长度，填充式
+    '''
+    def removeDuplicates(self, nums):
+        pointer = 0
+        for num in nums:
+            if pointer == 0 or num != nums[pointer - 1]:
+                nums[pointer] = num
+                pointer += 1
+        return pointer
+
 
 s = Solution()
 print s.removeDuplicates([1, 1, 2])

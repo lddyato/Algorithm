@@ -28,28 +28,28 @@ class Solution(object):
     Time: O(n)
     '''
     def minSubArrayLen(self, s, nums):
-        head, tail, n, minimal, collect = 0, 0, len(nums), float('inf'), 0
+        fast, slow, sum, n, r = 0, 0, 0, len(nums), float('inf')
         while 1:
-            while head < n and collect < s:
-                collect += nums[head]
-                head += 1
+            while fast < n and sum < s:
+                sum += nums[fast]
+                fast += 1
 
-            if head >= n and collect < s:
+            if fast >= n and sum < s:
                 break
 
-            while tail < head and collect >= s:
-                minimal = min(minimal, head - tail)
-                collect -= nums[tail]
-                tail += 1
+            while slow < fast and sum >= s:
+                r = min(r, fast - slow)
+                sum -= nums[slow]
+                slow += 1
 
-        return 0 if minimal == float('inf') else minimal
+        return 0 if r == float('inf') else r
 
 
 class Solution(object):
     '''算法思路：
 
     看到 log(n) 就应该想到二分查找，二分查找需要数组是有序的，而 nums 不是有序的，
-    但是看到数组里的元素是有序的，则其前 n 项和必定是递增的，对于每一个元素，找到其后边
+    但是看到数组里的元素是正数，则其前 n 项和必定是递增的，对于每一个元素，找到其后边
     不小于 s 的 index 最小的元素，比较子串的长度即可
 
     Time: O(n*log(n))

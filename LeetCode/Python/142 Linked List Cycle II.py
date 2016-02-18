@@ -38,15 +38,10 @@ class Solution(object):
         while fast and fast.next:
             slow, fast = slow.next, fast.next.next
             if slow == fast:
-                break
-        else:
-            return
-
-        slow = head
-        while slow != fast:
-            slow, fast = slow.next, fast.next
-
-        return slow
+                slow = head
+                while slow != fast:
+                    slow, fast = slow.next, fast.next
+                return slow
 
 
 a = ListNode(1)

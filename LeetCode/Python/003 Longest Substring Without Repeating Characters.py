@@ -47,20 +47,15 @@ class Solution(object):
     record_tuple 了
     '''
     def lengthOfLongestSubstring(self, s):
-        i, start, count, longest, record = 0, 0, 0, 0, {}
-        while i < len(s):
-            current = s[i]
-            if current not in record or record[current] < start:
-                count += 1
+        r, record, slow = 0, {}, 0
+
+        for i, char in enumerate(s):
+            if char not in record or record[char] < slow:
+                r = max(r, i - slow + 1)
             else:
-                longest = max(count, longest)
-                count = i - record[current]
-                start = record[current] + 1
-
-            record[current] = i
-            i += 1
-
-        return max(count, longest)
+                slow = record[char] + 1
+            record[char] = i
+        return r
 
 
 s = Solution()
