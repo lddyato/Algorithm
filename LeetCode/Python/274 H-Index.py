@@ -29,30 +29,30 @@ class Solution(object):
     Time: O(n*log(n))
     '''
     def hIndex(self, citations):
-        citations.sort(reverse=True)
-        for i, h in enumerate(citations):
-            if i + 1 > h:
-                return i
+        for i, num in enumerate(sorted(citations), 1):
+            if num < i:
+                return i - 1
         return len(citations)
 
 
 class Solution(object):
     '''算法思路：
 
-    由于 h-index <= 数组的长度，因此形成一个数组，利用这个特性做一个特殊的排序
+    由于 h-index <= 数组的长度, 因此可以利用 couting sort
 
     Time: O(n)
     '''
     def hIndex(self, citations):
-        record, length = [0] * (len(citations) + 1), len(citations)
+        n = len(citations)
+        count = [0] * (n + 1)
 
-        for c in citations:
-            record[min(length, c)] += 1
+        for num in citations:
+            count[min(n, num)] += 1
 
-        sum = 0
-        for i in xrange(length, 0, -1):
-            sum += record[i]
-            if sum >= i:
+        r = 0
+        for i in xrange(n, 0, -1):
+            r += count[i]
+            if r >= i:
                 return i
         return 0
 

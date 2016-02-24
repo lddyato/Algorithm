@@ -59,63 +59,55 @@ class Solution(object):
 
     结果：AC
     '''
-    def searchTop(self, image, low, high):
-        l, h = low, high
-        while l <= h:
-            mid = l + h >> 1
-            if '1' not in image[mid]:
-                l = mid + 1
-            else:
-                if mid > low and '1' not in image[mid - 1] or mid == low:
-                    return mid
-                h = mid - 1
-        return l
-
-    def searchBottom(self, image, low, high):
-        l, h = low, high
-        while l <= h:
-            mid = l + h >> 1
-            if '1' not in image[mid]:
-                h = mid - 1
-            else:
-                if mid < high and '1' not in image[mid + 1] or mid == high:
-                    return mid
-                l = mid + 1
-        return h
-
     def searchLeft(self, image, low, high):
-        l, h = low, high
-        while l <= h:
-            mid = l + h >> 1
-            if '1' not in [row[mid] for row in image]:
-                l = mid + 1
-            else:
-                if (mid > low and '1' not in [row[mid - 1] for row in image] or
-                        mid == low):
+        while low <= high:
+            mid = low + high >> 1
+            if any(row[mid] == '1' for row in image):
+                if mid == 0 or all(row[mid - 1] == '0' for row in image):
                     return mid
-                h = mid - 1
-        return l
+                high = mid - 1
+            else:
+                low = mid + 1
 
-    def searchRight(self, image, low, high):
-        l, h = low, high
-        while l <= h:
-            mid = l + h >> 1
-            if '1' not in [row[mid] for row in image]:
-                h = mid - 1
-            else:
-                if (mid < high and '1' not in [row[mid + 1] for row in image]
-                        or mid == high):
+    def searchRight(self, image, low, high, n):
+        while low <= high:
+            mid = low + high >> 1
+            if any(row[mid] == '1' for row in image):
+                if mid == n - 1 or all(row[mid + 1] == '0' for row in image):
                     return mid
-                l = mid + 1
-        return h
+                low = mid + 1
+            else:
+                high = mid - 1
+
+    def searchTop(self, image, low, high):
+        while low <= high:
+            mid = low + high >> 1
+            if any(pix == '1' for pix in image[mid]):
+                if mid == 0 or all(pix == '0' for pix in image[mid - 1]):
+                    return mid
+                high = mid - 1
+            else:
+                low = mid + 1
+
+    def searchBottom(self, image, low, high, m):
+        while low <= high:
+            mid = low + high >> 1
+            if any(pix == '1' for pix in image[mid]):
+                if mid == m - 1 or all(pix == '0' for pix in image[mid + 1]):
+                    return mid
+                low = mid + 1
+            else:
+                high = mid - 1
 
     def minArea(self, image, x, y):
-        top = self.searchTop(image, 0, x - 1)
-        bottom = self.searchBottom(image, x + 1, len(image) - 1)
-        left = self.searchLeft(image, 0, y - 1)
-        right = self.searchRight(image, y + 1, len(image[0]) - 1)
+        m, n = map(len, (image, image[0]))
 
-        return (bottom - top + 1) * (right - left + 1)
+        left = self.searchLeft(image, 0, y)
+        right = self.searchRight(image, y, n - 1, n)
+        top = self.searchTop(image, 0, x)
+        bottom = self.searchBottom(image, x, m - 1, m)
+
+        return (right - left + 1) * (bottom - top + 1)
 
 
 s = Solution()

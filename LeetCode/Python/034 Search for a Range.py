@@ -18,39 +18,64 @@ return [3, 4].
 '''
 
 
+def bisect_left(nums, target):
+    low, high = 0, len(nums) - 1
+    while low <= high:
+        mid = low + high >> 1
+
+        if nums[mid] < target:
+            low = mid + 1
+        elif nums[mid] > target:
+            high = mid - 1
+        else:
+            if mid == 0 or nums[mid - 1] < target:
+                return mid
+            high = mid - 1
+    return -1
+
+
+def bisect_right(nums, target):
+    low, high = 0, len(nums) - 1
+    while low <= high:
+        mid = low + high >> 1
+        if nums[mid] < target:
+            low = mid + 1
+        elif nums[mid] > target:
+            high = mid - 1
+        else:
+            if mid == len(nums) - 1 or nums[mid + 1] > target:
+                return mid
+            low = mid + 1
+    return -1
+
+
 class Solution(object):
     '''算法思路：
 
-    二分查找
+    二分查找, 自己实现
     '''
-    def searchLeft(self, nums, target):
-        low, high = 0, len(nums) - 1
-        while low <= high:
-            mid = low + high >> 1
-            if nums[mid] < target:
-                low = mid + 1
-            else:
-                if (nums[mid] == target and (mid and
-                        nums[mid - 1] < target or not mid)):
-                    return mid
-                high = mid - 1
-        return -1
-
-    def searchRight(self, nums, target):
-        low, high = 0, len(nums) - 1
-        while low <= high:
-            mid = low + high >> 1
-            if nums[mid] > target:
-                high = mid - 1
-            else:
-                if (nums[mid] == target and (mid + 1 < len(nums) and
-                        nums[mid + 1] > target or mid + 1 == len(nums))):
-                    return mid
-                low = mid + 1
-        return -1
-
     def searchRange(self, nums, target):
-        return [f(nums, target) for f in (self.searchLeft, self.searchRight)]
+        return [bs(nums, target) for bs in (bisect_left, bisect_right)]
+
+
+import bisect
+
+
+class Solution(object):
+    '''算法思路：
+
+    使用内置库函数实现
+    '''
+    def searchRange(self, nums, target):
+        start, end = [
+            bs(nums, target)
+            for bs in (bisect.bisect_left, bisect.bisect_right)
+        ]
+
+        if start >= len(nums) or nums[start] != target:
+            return [-1, -1]
+
+        return [start, end - 1]
 
 
 s = Solution()

@@ -18,12 +18,9 @@ Note:
 
 class Solution(object):
     def closestValue(self, root, target):
-        closest = root.val
-
+        r = root.val
         while root:
-            if abs(target - root.val) < abs(target - closest):
-                closest = root.val
-            root = root.left if target <= root.val else root.right
-
-        return closest
-
+            if abs(root.val - target) < abs(r - target):
+                r = root.val
+            root = root.left if target < root.val else root.right
+        return r

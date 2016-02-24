@@ -91,18 +91,14 @@ class Solution(object):
     结果：AC
     '''
     def searchMatrix(self, matrix, target):
-        if not matrix:
-            return False
-
-        m, n = len(matrix), len(matrix[0])
+        m, n = len(matrix), len(matrix[0]) if matrix else 0
 
         i, j = 0, n - 1
         while i < m and j >= 0:
-            if target < matrix[i][j]:
-                j -= 1
-            elif target > matrix[i][j]:
+            if matrix[i][j] < target:
                 i += 1
+            elif matrix[i][j] > target:
+                j -= 1
             else:
                 return True
-
         return False

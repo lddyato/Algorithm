@@ -15,14 +15,6 @@ have between 1 and 2h nodes inclusive at the last level h.
 '''
 
 
-# Definition for a binary tree node.
-# class TreeNode(object):
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
-
-
 class Solution(object):
     '''算法思路：
 
@@ -86,23 +78,28 @@ class Solution(object):
 class Solution(object):
     '''算法思路：
 
-    分别计算左右子树的高度，如果左右子树高度一致，那么最后一个叶节点一定在右子树上，
-    如果左右子树高度不一样，那么最后一个叶节点一定在左子树上
+    分别计算左右子树的高度，如果左右子树高度一致，那么左子树一定是满二叉树，满二叉树的节点个数
+    为 2^l - 1 (l 为左子树高度)，再加上 root，为 2^l，此时搜索右子树。如果左右子树高度不同，
+    那么右子树一定为满二叉树，同样加上 2^r，一直如此直到当前节点为空.
     '''
     def getHeight(self, root):
         height = 0
         while root:
-            root = root.left
             height += 1
+            root = root.left
         return height
 
     def countNodes(self, root):
-        if not root:
-            return 0
-
-        l, r = map(self.getHeight, (root.left, root.right))
-        shift, child = (l, root.right) if l == r else (r, root.left)
-        return (1 << shift) + self.countNodes(child)
+        count = 0
+        while root:
+            l, r = map(self.getHeight, (root.left, root.right))
+            if l == r:
+                count += 2 ** l
+                root = root.right
+            else:
+                count += 2 ** r
+                root = root.left
+        return count
 
 
 class TreeNode(object):

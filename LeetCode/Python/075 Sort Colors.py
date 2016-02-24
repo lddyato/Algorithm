@@ -48,6 +48,5 @@ class Solution(object):
 
             i += 1
 
-e
 s = Solution()
 print s.sortColors([0, 2, 1])

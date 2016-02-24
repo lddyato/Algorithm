@@ -16,26 +16,39 @@ class Solution(object):
     二分逼近
 
     需要注意的有以下几点：
-    - count 的加入是为了避免由于 diff 的精度不够而陷入死循环
     - 找到结果时，diff > 0
     '''
     def mySqrt(self, x):
-        low, high, e, count = 0, x, 1e-8, 0
-        while count <= 100:
+        low, high = 0, x
+        while 1:
             mid = (low + high) / 2.0
-
             diff = mid ** 2 - x
-            if abs(diff) <= e and diff > 0:
-                break
 
-            if diff > 0:
-                high = mid
+            if diff >= 0 and diff < 1e-6:
+                return int(mid)
+
+            if diff < 0:
+                low = mid + 1
             else:
-                low = mid
+                high = mid - 1
 
-            count += 1
 
-        return int(mid)
+class Solution(object):
+    '''算法思路：
+
+    二分逼近，由于要返回的是整数，所以找到最后一个满足 r^2 <= x 的整数即可
+    '''
+    def mySqrt(self, x):
+        low, high = 0, x
+        while low <= high:
+            mid = low + high >> 1
+            diff = mid ** 2 - x
+
+            if diff <= 0:
+                low = mid + 1
+            else:
+                high = mid - 1
+        return low - 1
 
 
 s = Solution()

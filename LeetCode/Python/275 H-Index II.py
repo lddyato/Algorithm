@@ -12,20 +12,21 @@ order? Could you optimize your algorithm?
 class Solution(object):
     '''算法思路：
 
-    二分查找
+    从右往左，找到最后一个使得 num[mid] >= n - mid，返回长度 n - mid
     '''
     def hIndex(self, citations):
-        low, high, n = 0, len(citations) - 1, len(citations)
+        n = len(citations)
+
+        low, high = 0, n - 1
         while low <= high:
             mid = low + high >> 1
-            if n - mid <= citations[mid]:
-                high = mid - 1
-            else:
-                if (mid + 1 < n and n - 1 - mid <= citations[mid + 1] or
-                        mid + 1 == n):
-                    return n - 1 - mid
+            if citations[mid] < n - mid:
                 low = mid + 1
-        return n
+            else:
+                if mid == 0 or citations[mid - 1] < n - mid + 1:
+                    return n - mid
+                high = mid - 1
+        return 0
 
 
 s = Solution()

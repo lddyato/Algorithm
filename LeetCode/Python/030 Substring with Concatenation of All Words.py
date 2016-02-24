@@ -52,10 +52,8 @@ class Solution(object):
     观察可以得到，上述解法有一部分重复判断以至于浪费了大量时间，因此可以缓存已经比较出来
     出来的的结果
 
-    times: 每个单词出现的次数
-    window: 当前 window 里一次出现的单词
-    position: 每种单词出现的位置
-    length: 当前 window 长度
+    localCout: 每个单词出现的次数
+    window: 当前 window 里依次出现的单词
 
     - 如果当前单词不在 words 中，那么应该从该单词的下一个单词重新计算
     - 如果当前单词出现的次数操作了 words 中出行的次数，那么从该单词在 window 中第一次
@@ -65,44 +63,27 @@ class Solution(object):
     结果：AC
     '''
     def findSubstring(self, s, words):
-        m, n, r = len(words), len(words[0]) if words else 0, []
-
+        n, m, r = len(words), len(words[0]) if words else 0, []
         counter = collections.Counter(words)
-        for i in xrange(n):
-            times, window, position, length = (
-                collections.Counter(), collections.deque(),
-                collections.defaultdict(collections.deque), 0
-            )
 
-            for j in xrange(i, len(s) - n + 1, n):
-                substr = s[j:j + n]
-                if substr not in counter:
-                    times.clear()
+        for i in xrange(m):
+            localCout = collections.defaultdict(int)
+            window = collections.deque()
+
+            for j in xrange(i, len(s), m):
+                word = s[j:j + m]
+                if word in counter:
+                    localCout[word] += 1
+                    window.append(word)
+
+                    while localCout[word] > counter[word]:
+                        localCout[window.popleft()] -= 1
+
+                    if len(window) == n:
+                        r.append(j - (n - 1) * m)
+                else:
+                    localCout.clear()
                     window.clear()
-                    position.clear()
-                    length = 0
-                    continue
-
-                length += 1
-                times[substr] += 1
-                position[substr].append(j)
-                window.append(substr)
-
-                if times[substr] > counter[substr]:
-                    length = (j - position[substr][0]) / n
-
-                    for _ in xrange(len(window) - length):
-                        word = window.popleft()
-                        times[word] -= 1
-                        position[word].popleft()
-
-                if length == m:
-                    r.append(position[window[0]][0])
-
-                    length -= 1
-                    times[window[0]] -= 1
-                    position[window[0]].popleft()
-                    window.popleft()
         return r
 
 

@@ -63,5 +63,42 @@ class Solution(object):
         return s[start:end] if end != float('inf') else ''
 
 
+
+class Solution(object):
+    '''算法思路：
+
+    同上，不过没用 bit 操作
+    '''
+    def minWindow(self, s, t):
+        counter, times, local = (
+            collections.Counter(t), collections.defaultdict(int), set())
+
+        n, m, slow, fast, l, r = len(s), len(counter), 0, 0, float('inf'), ''
+        while 1:
+            while fast < n and len(local) < m:
+                char = s[fast]
+                if char in counter:
+                    times[char] += 1
+                    if times[char] >= counter[char]:
+                        local.add(char)
+                fast += 1
+
+            if fast >= n and len(local) < m:
+                break
+
+            while slow < fast and len(local) >= m:
+                if fast - slow < l:
+                    l = fast - slow
+                    r = s[slow:fast]
+
+                char = s[slow]
+                if char in counter:
+                    times[char] -= 1
+                    if times[char] < counter[char]:
+                        local.discard(char)
+                slow += 1
+        return r
+
+
 s = Solution()
 print s.minWindow('a', 'a')

@@ -127,27 +127,15 @@ class Solution(object):
 class Solution(object):
     '''算法思路：
 
-    同上，不过把 r 变成有序的
+    动态规划，令 dp[i] 为以 nums[i] 结尾的 LIS，那么 dp[i] = max(dp[0..i-1]) + 1
     '''
-    def search(self, bst, num):
-        low, high = 0, len(bst) - 1
-        while low <= high:
-            mid = low + high >> 1
-            if bst[mid][0] <= num:
-                low = mid + 1
-            else:
-                if mid > 0 and bst[mid - 1][0] <= num or mid == 0:
-                    r = max(bst[mid:], key=lambda i: i[1])[1]
-                    return r + 1, bst[:mid] + [[num, r + 1]] + bst[mid:]
-                high = mid - 1
-        return 1, bst + [[num, 1]]
-
     def lengthOfLIS(self, nums):
-        length, bst, longest = len(nums), [], 0
-        for i in xrange(length - 1, -1, -1):
-            r, bst = self.search(bst, nums[i])
-            longest = max(longest, r)
-        return longest
+        dp = [1] * len(nums)
+        for i in xrange(1, len(nums)):
+            dp[i] = max([
+                dp[j] for j in xrange(i - 1, -1, -1) if nums[i] > nums[j]
+            ] or [0]) + 1
+        return max(dp or [0])
 
 
 class Solution(object):
@@ -172,12 +160,15 @@ class Solution(object):
     def lengthOfLIS(self, nums):
         lis = []
         for num in nums:
-            if not lis or num > lis[-1]:
+            i = self.search(lis, num)
+            if i >= len(lis):
                 lis.append(num)
             else:
-                lis[self.search(lis, num)] = num
+                lis[i] = num
         return len(lis)
 
+
+import bisect
 
 class Solution(object):
     '''算法思路：
@@ -185,14 +176,13 @@ class Solution(object):
     同上，只不过用内置的库来进行二分查找
     '''
     def lengthOfLIS(self, nums):
-        import bisect
-
         lis = []
         for num in nums:
-            if not lis or num > lis[-1]:
+            i = bisect.bisect_left(lis, num)
+            if i >= len(lis):
                 lis.append(num)
             else:
-                lis[bisect.bisect_left(lis, num)] = num
+                lis[i] = num
         return len(lis)
 
 

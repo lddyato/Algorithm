@@ -90,12 +90,13 @@ class Solution(object):
     Time: O(n)
     '''
     def moveZeroes(self, nums):
-        i = j = 0
-        while i < len(nums):
-            if nums[i]:
-                nums[i], nums[j] = nums[j], nums[i]
-                j += 1
-            i += 1
+        slow, fast, n = 0, 0, len(nums)
+        while fast < n:
+            if nums[fast]:
+                nums[slow], nums[fast] = nums[fast], nums[slow]
+                slow += 1
+            fast += 1
+
 
 class Solution(object):
     '''算法思路：

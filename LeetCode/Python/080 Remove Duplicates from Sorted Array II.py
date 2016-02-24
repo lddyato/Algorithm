@@ -29,5 +29,24 @@ class Solution(object):
         return tail
 
 
+class Solution(object):
+    '''算法思路：
+
+    对于最多 k 个重复的数字，普遍做法，用双指针，并用一个变量记录当前重复填充了多少个
+    '''
+    def removeDuplicates(self, nums):
+        if not nums:
+            return 0
+
+        n, slow, fast, cnt, k = len(nums), 0, 1, 1, 2
+        while fast < n:
+            if nums[fast] != nums[slow] or cnt < k:
+                cnt = 1 if nums[fast] != nums[slow] else (cnt + 1)
+                slow += 1
+                nums[slow] = nums[fast]
+            fast += 1
+        return slow + 1
+
+
 s = Solution()
 print s.removeDuplicates([0, 0, 0, 0])

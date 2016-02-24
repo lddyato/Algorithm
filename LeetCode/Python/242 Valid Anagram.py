@@ -39,6 +39,9 @@ class Solution(object):
         return self.genKey(s) == self.genKey(t)
 
 
+import collections
+
+
 class Solution(object):
     '''算法思路：
 
@@ -51,15 +54,9 @@ class Solution(object):
     Space: O(n)
     '''
     def isAnagram(self, s, t):
-        record = {}
-
-        for char in s:
-            record[char] = record.get(char, 0) + 1
-
-        for char in t:
-            record[char] = record.get(char, 0) - 1
-
-        return not any(record.values())
+        counter = collections.Counter(s)
+        counter.subtract(collections.Counter(t))
+        return not any(counter.values())
 
 
 class Solution(object):

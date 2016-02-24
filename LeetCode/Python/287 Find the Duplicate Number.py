@@ -39,7 +39,7 @@ class Solution(object):
     '''算法思路：
 
     这里利用了一个事实：
-    [1, n] 里边如果中间数 (1+n)/2 小的数的个数 count <= 中间数，那么重复的元素一定
+    [1, n] 里边如果比中间数 (1+n)/2 小的数的个数 count <= 中间数，那么重复的元素一定
     不在 1 到 (1+n)/2 之间
 
     Time: O(n * log(n))
@@ -48,15 +48,15 @@ class Solution(object):
     '''
     def findDuplicate(self, nums):
         low, high = 1, len(nums) - 1
-        while low < high:
-            count, mid = 0, (low + high) / 2
-            for n in nums:
-                if n <= mid:
-                    count += 1
-            if count <= mid:
+        while low <= high:
+            mid, cnt = low + high >> 1, 0
+            for num in nums:
+                cnt += num <= mid
+
+            if cnt <= mid:
                 low = mid + 1
             else:
-                high = mid
+                high = mid - 1
         return low
 
 
@@ -107,13 +107,10 @@ class Solution(object):
         while 1:
             low, fast = nums[low], nums[nums[fast]]
             if low == fast:
-                break
-
-        low = nums[0]
-        while low != fast:
-            low, fast = nums[low], nums[fast]
-
-        return low
+                fast = nums[0]
+                while low != fast:
+                    low, fast = nums[low], nums[fast]
+                return low
 
 
 s = Solution()

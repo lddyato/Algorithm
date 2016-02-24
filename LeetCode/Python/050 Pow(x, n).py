@@ -9,31 +9,29 @@ Implement pow(x, n).
 
 
 class Solution(object):
-    '''算法思路：
+    ''算法思路：
 
-    快速幂
+    快速幂运算，也可以这样理解:
 
-    注意: 要考虑到 n 为负数的情况
-    '''
-    def pow(self, x, n):
-        result = 1
-        while n:
-            if n & 1:
-                result *= x
+    n = k0*2^0 + k1*2^1 + k2*2^2 + ... + kn*2^n
 
-            x *= x
-            n >>= 1
+    x ^ n
+    = x ^ (k0*2^0 + k1*2^1 + k2*2^2 + ... + kn*2^n)
+    = (x^(2^0))^k0 * (x^(2^1))^k1 * (x^(2^2))^k2 * ... * (x^(2^n))^kn
 
-        return result
-
+    因此，计算出 k0, k1, k2, ..., kn 按照公式即可求出 x ^ n
+    ''
     def myPow(self, x, n):
-        if n == 0:
-            return 1
-
         if n < 0:
-            return 1.0/self.pow(x, -n)
+            x = 1.0 / x if x else x
+            n = -n
 
-        return self.pow(x, n)
+        r, base = 1, x
+        while n:
+            r *= base if n & 1 else 1
+            n >>= 1
+            base *= base
+        return r
 
 
 s = Solution()

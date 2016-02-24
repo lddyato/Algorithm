@@ -14,6 +14,9 @@ return 2.
 '''
 
 
+import collections
+
+
 class Solution(object):
     '''算法思路：
 
@@ -22,8 +25,6 @@ class Solution(object):
     参考了：https://leetcode.com/discuss/58720/c-solution-using-a-map-total-11-lines
     '''
     def minMeetingRooms(self, intervals):
-        import collections
-
         record = collections.defaultdict(int)
         for i in intervals:
             record[i.start] += 1
@@ -37,24 +38,24 @@ class Solution(object):
         return maximus
 
 
+import heapq
+
+
 class Solution(object):
     '''算法思路：
 
-    最小堆，贪心思想，开始最早的先使用教室，结束最早的最先被占用，如果冲突那就另外开一
-    个教室
-
-    参考了：https://leetcode.com/discuss/58926/python-heapq-solutions-with-explanation
+    最小堆，每次清理已经结束的可能，添加该可能否，再统计尚未结束的课程的个数
     '''
     def minMeetingRooms(self, intervals):
-        import heapq
-
-        heap = []
         intervals.sort(key=lambda i: i.start)
-        for i in intervals:
-            (heapq.heappush if not heap or i.start < heap[0] else
-                heapq.heapreplace)(heap, i.end)
-        return len(heap)
 
+        heap, r = [], 0
+        for i in intervals:
+            while heap and heap[0] <= i.start:
+                heapq.heappop(heap)
+            heapq.heappush(heap, i.end)
+            r = max(r, len(heap))
+        return r
 
 
 class Interval(object):

@@ -121,17 +121,23 @@ class Solution(object):
 
     有一个规则是，从确定以的一端开始。
 
-    dp[i][j] 表示从 (i, j) 到 (m - 1, n - 1) 所需最小 health
+    dp[i][j] 表示未踏入(i, j)， 从 (i, j) 到 (m - 1, n - 1) 所需最小 health, 假设踏入
+    前血量为 before，踏入后为 after, 则有：
+
+    ===> before + dungeon[i][j] >= after >= 1
+    ===> before >= max(after - dungeon[i][j], 1)
 
     dp[i][j] = min(
         max(dp[i + 1][j] - dungeon[i][j], 1),
         max(dp[i][j + 1] - dungeon[i][j], 1)
     )
 
+    Time: O(m*n)
+
     结果：AC
     '''
     def calculateMinimumHP(self, dungeon):
-        m, n = len(dungeon), len(dungeon[0])
+        m, n = map(len, (dungeon, dungeon[0]))
 
         dp = [[0] * n for _ in xrange(m)]
         dp[-1][-1] = max(1 - dungeon[-1][-1], 1)

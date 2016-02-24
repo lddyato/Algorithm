@@ -18,5 +18,7 @@ class Solution(object):
     def canAttendMeetings(self, intervals):
         intervals.sort(key=lambda i: i.start)
 
-        return all(intervals[i].end <= intervals[i + 1].start
-                   for i in xrange(len(intervals) - 1))
+        return all([
+            intervals[i].start >= intervals[i-1].end
+            for i in xrange(1, len(intervals))
+        ])

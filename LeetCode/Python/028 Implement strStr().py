@@ -42,10 +42,10 @@ class Solution(object):
         next, j = [0] * len(substr), -1
 
         for i, char in enumerate(substr):
-            while j >= 0 and substr[j + 1] != substr[i]:
+            while j >= 0 and substr[j + 1] != char:
                 j = next[j]
 
-            if i > 0 and substr[j + 1] == substr[i]:
+            if i and substr[j + 1] == char:
                 j += 1
 
             next[i] = j
@@ -66,5 +66,4 @@ class Solution(object):
 
             if j == m - 1:
                 return i - j
-
         return -1

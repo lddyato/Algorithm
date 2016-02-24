@@ -24,30 +24,26 @@ class Solution(object):
 
     Time: O(n)
     '''
-    def search(self, root):
-        if self.r is not None or not root:
-            return
-
-        self.search(root.left)
-
-        self.k -= 1
-        if not self.k:
-            self.r = root.val
-
-        self.search(root.right)
-
     def kthSmallest(self, root, k):
-        self.k = k
-        self.r = None
-
-        self.search(root)
-        return self.r
+        stack, queue = [], []
+        while root or stack:
+            if root:
+                stack.append(root)
+                root = root.left
+            else:
+                root = stack.pop()
+                queue.append(root.val)
+                if len(queue) == k:
+                    return queue[-1]
+                root = root.right
 
 
 class Solution(object):
     '''算法思路：
 
-    利用二分
+    利用 BST 的特性
+
+    Time: O(n)
     '''
     def countNode(self, root):
         return root and sum(
