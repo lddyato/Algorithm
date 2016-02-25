@@ -26,26 +26,22 @@ class Solution(object):
         if not head or not head.next:
             return head
 
-        current = head.next
-        head.next = None
+        dummy = ListNode(None)
+        dummy.next, tail = head, head.next
+        dummy.next.next = None
 
-        while current:
-            next = current.next
-
-            pre, cursor = None, head
-            while cursor and current.val > cursor.val:
-                pre, cursor = cursor, cursor.next
-
-            if pre:
-                pre.next = current
-                current.next = cursor
+        while tail:
+            pre, current, next = dummy, dummy.next, tail.next
+            while current:
+                if tail.val <= current.val:
+                    pre.next, tail.next = tail, current
+                    break
+                pre, current = current, current.next
             else:
-                current.next = head
-                head = current
+                pre.next, tail.next = tail, None
+            tail = next
 
-            current = next
-
-        return head
+        return dummy.next
 
 
 a = ListNode(5)

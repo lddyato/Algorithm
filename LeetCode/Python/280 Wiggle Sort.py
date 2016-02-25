@@ -99,6 +99,8 @@ class Solution(object):
 
     - 当 i 为偶数时，如果 nums[i] > nums[i - 1]，则交换 nums[i] 和 nums[i - 1]
     - 当 i 为奇数时，如果 nums[i] < nums[i - 1]，则交换 nums[i] 和 nums[i - 1]
+
+    Time: O(n)
     '''
     def wiggleSort(self, nums):
         for i in xrange(1, len(nums)):

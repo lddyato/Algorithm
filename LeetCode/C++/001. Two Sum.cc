@@ -41,9 +41,9 @@ public:
 
 int main() {
     Solution s;
-    vector<int> v = {3, 2, 4};
+    vector<int> v = {5, 1, 2, 3, 5};
 
-    for (auto i : s.twoSum(v, 6)) {
+    for (auto i : s.twoSum(v, 10)) {
         cout << i << endl;
     }
 }
