@@ -24,7 +24,8 @@ def getA(x):
         a = bit <= x
         A.append(a)
 
-        x -= a * bit
+        if a:
+            x -= bit
         bit >>= 1
     return A
 
@@ -56,10 +57,9 @@ class Solution(object):
 
         r = 0
         while bit:
-            a = divisor <= dividend
-
-            dividend -= a * divisor
-            r += a * bit
+            if divisor <= dividend:
+                dividend -= divisor
+                r += bit
 
             bit >>= 1
             divisor >>= 1

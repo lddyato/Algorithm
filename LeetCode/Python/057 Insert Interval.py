@@ -54,6 +54,51 @@ class Solution(object):
         return intervals[:iStart] + [Interval(start, end)] + intervals[iEnd:]
 
 
+class Solution(object):
+    '''算法思路：
+
+    同上，
+
+    找到 newInterval.start 和 newInterval.end 应该在的位置，然后根据
+
+    newInterval.start 和 intervals[start].start
+    newInterval.end 和 intervals[end].start
+
+    二者的关系来进行覆盖
+    '''
+    def search(self, intervals, target):
+        low, high = 0, len(intervals) - 1
+        while low <= high:
+            mid = low + high >> 1
+            if intervals[mid].end < target:
+                low = mid + 1
+            else:
+                if mid == 0 or intervals[mid - 1].end < target:
+                    return mid
+                high = mid - 1
+        return low
+
+    def insert(self, intervals, newInterval):
+        n, MAX = len(intervals), float('inf')
+
+        start, end = [
+            self.search(intervals, t)
+            for t in (newInterval.start, newInterval.end)
+        ]
+
+        before, after = intervals[:start], intervals[end + 1:]
+
+        newInterval.start = min(
+            intervals[start].start if start < n else MAX, newInterval.start)
+
+        if end < n:
+            if newInterval.end < intervals[end].start:
+                return before + [newInterval, intervals[end]] + after
+            newInterval.end = intervals[end].end
+
+        return before + [newInterval] + after
+
+
 class Interval(object):
     def __init__(self, s=0, e=0):
         self.start = s

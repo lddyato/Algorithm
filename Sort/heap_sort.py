@@ -23,6 +23,7 @@ class MaxHeap(object):
         return len(self.heap)
 
     def heapify(self, root=0, end=None):
+        # Time: O(h)
         heap, end = self.heap, self.size - 1 if end is None else end
         while 1:
             child = 2 * root + 1
@@ -38,6 +39,7 @@ class MaxHeap(object):
             root = child
 
     def build(self):
+        # Time: O(n)
         for root in xrange(self.size >> 1, -1, -1):
             self.heapify(root)
 

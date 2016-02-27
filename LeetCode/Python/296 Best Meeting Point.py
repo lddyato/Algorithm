@@ -63,6 +63,25 @@ class Solution(object):
             for p in points])
 
 
+class Solution(object):
+    '''算法思路：
+
+    其实一维时，在 mendian 处曼哈顿距离最小，证明：
+
+    http://math.stackexchange.com/questions/113270/the-median-minimizes-the-sum-of-absolute-deviations
+    '''
+    def minTotalDistance(self, grid):
+        x = sum([[i] * row.count(1) for i, row in enumerate(grid)], [])
+        y = sum([
+            [j] * len([row[j] for row in grid if row[j]])
+            for j in xrange(len(grid[0]))
+        ], [])
+
+        midX, midY = len(x) >> 1, len(y) >> 1
+        return sum([abs(p - x[midX]) for p in x]) + sum(
+            [abs(p - y[midY]) for p in y])
+
+
 s = Solution()
 print s.minTotalDistance([
     [0,0,0,0,0,0,0,0,0],
@@ -70,5 +89,3 @@ print s.minTotalDistance([
     [1,1,0,0,0,0,1,0,0],
     [0,0,0,1,1,1,0,0,0]
 ])
-
-# print s.minTotalDistance()
