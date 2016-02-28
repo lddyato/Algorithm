@@ -80,7 +80,7 @@ print quick_sort(a, 0, len(a) - 1)
 
 
 # twoWayPartition，迭代版本
-def getKth(nums, start, end, k):
+def getKth(nums, k):
     start, end = 0, len(nums) - 1
     while 1:
         pivot, low, high = nums[start], start, end

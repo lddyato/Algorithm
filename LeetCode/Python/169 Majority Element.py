@@ -69,6 +69,8 @@ class Solution(object):
     '''算法思路：
 
     Moore Voting Algorithm
+
+    Time: O(n)
     '''
     def majorityElement(self, nums):
         count, majority = 0, None
@@ -90,19 +92,15 @@ class Solution(object):
 
     在 c 语言里边这种写法是OK的，但是在Python里边，这种写法不可以，因为在python里边
     负数的符号位是无限向左延伸的，因此需要对最后的结果处理一下
+
+    Time: O(n)
     '''
     def majorityElement(self, nums):
-        n = len(nums)
-        mid = (n >> 1) + (n & 1)
-
-        r = 0
+        n, r = len(nums) >> 1, 0
         for i in xrange(32):
-            mask, count = 1 << i, 0
-            for num in nums:
-                count += num & mask != 0
-                if count >= mid:
-                    r |= mask
-                    break
+            mask = 1 << i
+            if len(filter(None, [num & mask for num in nums])) > n:
+                r |= mask
 
         MAX = (1 << 31) - 1
         return (r & MAX) - MAX - 1 if r > MAX else r

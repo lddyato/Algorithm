@@ -43,22 +43,20 @@ class Solution(object):
     得到结果
     '''
     def singleNumber(self, nums):
-        s = 0
-        for n in nums:
-            s ^= n
+        xor = reduce(lambda x, y: x ^ y, nums, 0)
 
-        offset = 1
-        while not (s & offset):
-            offset <<= 1
+        mask = 1
+        while not xor & 1:
+            xor >>= 1
+            mask <<= 1
 
-        a, b = 0, 0
-        for n in nums:
-            if n & offset:
-                a ^= n
+        zero, one = 0, 0
+        for num in nums:
+            if num & mask:
+                one ^= num
             else:
-                b ^= n
-
-        return [a, b]
+                zero ^= num
+        return zero, one
 
 
 s = Solution()

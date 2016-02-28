@@ -10,12 +10,16 @@ For example, the 32-bit integer ’11' has binary representation
 
 
 class Solution(object):
+    '''算法思路：
+
+    统计 1 的个数
+    '''
     def hammingWeight(self, n):
-        count = 0
+        r = 0
         while n:
-            count += n & 1
+            r += n & 1
             n >>= 1
-        return count
+        return r
 
 
 s = Solution()

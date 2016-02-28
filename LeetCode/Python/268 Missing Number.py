@@ -39,5 +39,29 @@ class Solution(object):
         return n
 
 
+class Solution(object):
+    '''算法思路：
+
+    不用 hash，用一个数字保存
+    '''
+    def missingNumber(self, nums):
+        record = 0
+        for num in nums:
+            record |= 1 << num
+
+        for i in xrange(len(nums) + 1):
+            if not record & 1 << i:
+                return i
+
+
+class Solution(object):
+    '''算法思路：
+
+    [0..n] 的和减去 nums 的和即为结果
+    '''
+    def missingNumber(self, nums):
+        return sum(range(len(nums) + 1)) - sum(nums)
+
+
 s = Solution()
 print s.missingNumber([])

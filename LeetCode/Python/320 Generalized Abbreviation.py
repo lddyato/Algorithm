@@ -70,31 +70,30 @@ class Solution(object):
         return map(''.join, self.generate(word, False))
 
 
+import collections
+
+
 class Solution(object):
     '''算法思路：
 
-    迭代
+    BFS
     '''
     def generateAbbreviations(self, word):
-        import collections
-
         if not word:
             return ['']
 
-        word = collections.deque(word)
-        queue = collections.deque([[word.popleft()], [1]])
-
-        while word:
-            char = word.popleft()
-
+        queue = collections.deque([[word[0]], [1]])
+        for char in word[1:]:
             for _ in xrange(len(queue)):
-                node = queue.popleft()
-                queue += [node + [char]] + (
-                    [node[:-1] + [node[-1] + 1]]
-                    if isinstance(node[-1], int) else [node + [1]]
-                )
+                item = queue.popleft()
+                queue.append(item + [char])
 
-        return map(lambda r: ''.join(map(str, r)), queue)
+                if isinstance(item[-1], int):
+                    item[-1] += 1
+                    queue.append(item)
+                else:
+                    queue.append(item + [1])
+        return map(lambda item: ''.join(map(str, item)), queue)
 
 
 s = Solution()

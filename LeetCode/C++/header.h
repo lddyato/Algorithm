@@ -11,6 +11,7 @@
 #include <deque>
 #include <stack>
 #include <queue>
+#include <cmath>
 
 
 // 工程项目里边命名空间不推荐写在头文件里
@@ -26,5 +27,7 @@ using std::unordered_set;
 using std::deque;
 using std::stack;
 using std::queue;
+using std::pow;
+// using std::sum;
 
 #endif

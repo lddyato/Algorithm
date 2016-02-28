@@ -39,5 +39,19 @@ class Solution(object):
         return reduce(lambda x, y: x ^ y, nums, 0)
 
 
+class Solution(object):
+    '''算法思路：
+
+    同 II
+    '''
+    def singleNumber(self, nums):
+        r, k = 0, 2
+        for i in xrange(32):
+            mask = 1 << i
+            if sum([bool(mask & abs(num)) for num in nums]) % k:
+                r |= mask
+        return -r if len(filter(lambda x: x < 0, nums)) % k else r
+
+
 s = Solution()
 print s.singleNumber([2, 3, 2, 3, 23])

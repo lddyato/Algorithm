@@ -18,18 +18,35 @@ Related problem: Reverse Integer
 
 
 class Solution(object):
+    '''算法思路：
+
+    求出各个位的系数，然后反转后得到结果
+    '''
     def reverseBits(self, n):
-        count, r = 0, 0
-        while count < 32:
-            last = n & 1
+        bits = []
+        for i in xrange(32):
+            bits.append(n & 1)
             n >>= 1
 
-            r |= last
+        r, mask = 0, 1
+        for i in xrange(31, -1, -1):
+            if bits[i]:
+                r |= mask
+            mask <<= 1
+        return r
+
+
+class Solution(object):
+    '''算法思路：
+
+    同上，只不过求系数的同时，求出结果
+    '''
+    def reverseBits(self, n):
+        r = 0
+        for _ in xrange(32):
             r <<= 1
-
-            count += 1
-
-        r >>= 1
+            r |= n & 1
+            n >>= 1
         return r
 
 

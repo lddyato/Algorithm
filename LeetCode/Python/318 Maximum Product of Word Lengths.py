@@ -131,27 +131,22 @@ class Solution(object):
     Time: 最坏 O(n^2)
     结果：AC
     '''
+    def keyprint(self, word):
+        r = 0
+        for char in word:
+            r |= 1 << ord(char) - 97
+        return r
+
     def maxProduct(self, words):
-        words.sort(cmp=lambda x, y: [1, -1][len(x) > len(y)])
+        words.sort(key=len, reverse=True)
+        lens, keyprint, r = map(len, words), map(self.keyprint, words), 0
 
-        maps = {chr(i): i - 97 for i in xrange(97, 123)}
-        record = [
-            [reduce(lambda x, y: x | y, (1 << maps[c] for c in w), 0), len(w)]
-            for w in words]
-
-        length, maximum = len(words), 0
-        for i in xrange(length - 1):
-            bitsA, lenA = record[i]
-            for j in xrange(i + 1, length):
-                bitsB, lenB = record[j]
-
-                if lenA * lenB < maximum:
+        for i in xrange(len(words)):
+            for j in xrange(i + 1, len(words)):
+                if not keyprint[i] & keyprint[j]:
+                    r = max(r, lens[i] * lens[j])
                     break
-
-                if not bitsA & bitsB:
-                    maximum = max(maximum, lenA * lenB)
-
-        return maximum
+        return r
 
 
 s = Solution()

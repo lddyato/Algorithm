@@ -25,6 +25,31 @@ class Solution(object):
 class Solution(object):
     '''算法思路：
 
+    找到从 m 到 n，第 k 位 0 的个数
+
+    详细解释已 post 到 leetcode 上：
+    https://leetcode.com/discuss/89212/counting-zero-solution-different-from-all-the-others
+    '''
+    def countOne(self, num, k):
+        cycles, num, mask = num >> k + 1, num & ((1 << k + 1) - 1), 1 << k
+        return cycles * mask + (((num & ~mask) + 1) if num & mask else 0)
+
+    def countZero(self, num, k):
+        cycles, num, mask = num >> k + 1, num & ((1 << k + 1) - 1), 1 << k
+        return cycles * mask + (mask if num & mask else (num + 1))
+
+    def rangeBitwiseAnd(self, m, n):
+        r, mask = 0, 1
+        for i in xrange(32):
+            if self.countZero(n, i) - self.countZero(m - 1, i) == 0:
+                r |= mask
+            mask <<= 1
+        return r
+
+
+class Solution(object):
+    '''算法思路：
+
     求公共前缀
 
     参考了：https://leetcode.com/discuss/53646/simple-and-easy-to-understand-java-solution
@@ -36,19 +61,6 @@ class Solution(object):
             n >>= 1
             bits += 1
         return m << bits
-
-
-class Solution(object):
-    '''算法思路：
-
-    另外一种解法
-
-    https://leetcode.com/discuss/49088/2-line-solution-with-detailed-explanation
-    '''
-    def rangeBitwiseAnd(self, m, n):
-        while m < n:
-            n &= n - 1
-        return n
 
 
 s = Solution()
