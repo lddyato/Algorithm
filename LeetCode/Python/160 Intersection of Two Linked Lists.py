@@ -40,34 +40,28 @@ class ListNode(object):
 class Solution(object):
     '''算法思路：
 
-    算出两个 list 的长度的 diff，longer 开始的前 diff 不比较，比较剩下的
+    算出两个 list 的长度的 diff，前 diff 个不比较，比较剩下的
     '''
+    def cout(self, head):
+        cnt = 0
+        while head:
+            cnt += 1
+            head = head.next
+        return cnt
+
     def getIntersectionNode(self, headA, headB):
-        a, b, i, diff, longer, shorter = headA, headB, 0, 0, headA, headB
-        while a or b:
-            if not a or not b:
-                h = a or b
+        l1, l2, cnt1, cnt2 = headA, headB, self.cout(headA), self.cout(headB)
+        if cnt2 > cnt1:
+            l1, l2 = l2, l1
 
-                if h == b:
-                    longer, shorter = headB, headA
+        for _ in range(abs(cnt1 - cnt2)):
+            l1 = l1.next
 
-                while h:
-                    diff += 1
-                    h = h.next
+        while l1:
+            if l1 is l2:
+                return l1
 
-                break
-
-            a, b = a.next, b.next
-
-        while longer:
-            i += 1
-
-            if i > diff:
-                if longer == shorter:
-                    return longer
-                shorter = shorter.next
-
-            longer = longer.next
+            l1, l2 = l1.next, l2.next
 
 
 a = ListNode(5)

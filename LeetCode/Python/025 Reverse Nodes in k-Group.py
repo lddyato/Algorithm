@@ -26,35 +26,28 @@ For k = 3, you should return: 3->2->1->4->5
 class Solution(object):
     '''算法思路：
 
-    数到 k 的倍数时反转
+    每次翻转 list 的前 k 个，如果不足 k 个，那么将已经翻转过来的再翻转过来
     '''
+    def reverse(self, head, k):
+        rev, current = None, head
+        for _ in range(k):
+            if current:
+                rev, rev.next, current = current, rev, current.next
+            else:
+                current, head, rev = rev, rev, None
+                while current:
+                    rev, rev.next, current = current, rev, current.next
+                return rev, head, None
+        return rev, head, current
+
     def reverseKGroup(self, head, k):
         if k < 2:
             return head
 
-        n, new_head, last, start, current = 0, None, None, None, head
-        while current:
-            n += 1
+        dummy = tail = ListNode(None)
+        while head:
+            start, end, head = self.reverse(head, k)
+            tail.next, tail = start, end
 
-            next = current.next
-
-            if n % k:
-                start = start or current
-            else:
-                rev, cursor = None, start
-                while cursor != next:
-                    rev, rev.next, cursor = cursor, rev, cursor.next
-
-                start.next = next
-
-                if last:
-                    last.next = rev
-
-                last = start
-                start = None
-
-                new_head = new_head or rev
-
-            current = next
-
-        return new_head or head
+        tail.next = None
+        return dummy.next

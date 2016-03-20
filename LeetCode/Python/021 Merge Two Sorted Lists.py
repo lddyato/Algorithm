@@ -21,77 +21,17 @@ class ListNode(object):
 class Solution(object):
     '''算法思路：
 
-    递归解决归并排序
-    '''
-    def mergeTwoLists(self, l1, l2):
-        if not l1 or not l2:
-            return l1 or l2
-
-        if l1.val == l2.val:
-            next = l1.next
-
-            head = tail = l1
-            tail.next = l2
-            tail = l2
-
-            l1, l2 = next, l2.next
-
-        elif l1.val < l2.val:
-            head = tail = l1
-            l1 = l1.next
-        else:
-            head = tail = l2
-            l2 = l2.next
-
-        tail.next = self.mergeTwoLists(l1, l2)
-        return head
-
-
-class Solution(object):
-    '''算法思路：
-
     迭代解决归并排序
     '''
     def mergeTwoLists(self, l1, l2):
-        if not l1 or not l2:
-            return l1 or l2
-
-        head = tail = ListNode(None)
+        dummy = tail = ListNode(None)
         while l1 and l2:
             if l1.val < l2.val:
-                tail.next, tail = l1, l1
-                l1 = l1.next
+                tail.next, tail, l1 = l1, l1, l1.next
             else:
-                tail.next, tail = l2, l2
-                l2 = l2.next
-
+                tail.next, tail, l2 = l2, l2, l2.next
         tail.next = l1 or l2
-        return head.next
-
-
-class Solution(object):
-    '''算法思路：
-
-    迭代的另外一种写法
-    '''
-    def mergeTwoLists(self, l1, l2):
-        head = tail = ListNode(None)
-        while l1 or l2:
-            if not l1 or not l2:
-                l = l1 or l2
-                tail.next = l
-
-                return head
-
-            while l1 and l2 and l1.val <= l2.val:
-                tail.next, tail = l1, l1
-                l1 = l1.next
-
-            while l1 and l2 and l2.val <= l1.val:
-                tail.next, tail = l2, l2
-                l2 = l2.next
-
-        return head.next
+        return dummy.next
 
 
 a = ListNode(1)

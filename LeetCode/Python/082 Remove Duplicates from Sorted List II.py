@@ -16,22 +16,17 @@ Given 1->1->1->2->3, return 2->3.
 class Solution(object):
     '''算法思路：
 
-    找到前后 node 不一样的 node，然后连接起来
+    每走一步判断当前节点是否应该被添加到列表里边
     '''
     def deleteDuplicates(self, head):
-        new_head, tail, pre, current = None, None, None, head
-        while current:
-            if (pre is None or pre.val != current.val) and (
-                    current.next is None or current.next.val != current.val):
-                if not new_head:
-                    new_head = tail = current
-                else:
-                    tail.next = current
-                    tail = current
+        dummy = tail = ListNode(None)
+        while head:
+            node = head
+            if head.next and head.next.val == node.val:
+                while head and head.val == node.val:
+                    head = head.next
+            else:
+                tail.next, tail, head = head, head, head.next
 
-            pre, current = current, current.next
-
-        if tail:
-            tail.next = None
-
-        return new_head
+        tail.next = None
+        return dummy.next

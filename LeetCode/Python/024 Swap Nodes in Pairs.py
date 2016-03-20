@@ -26,33 +26,21 @@ class ListNode(object):
 class Solution(object):
     '''算法思路：
 
-    遍历一边，当是偶数的时候，交换和前边的 node
-
-    需要注意的是: 一般遍历下个节点是 current = current.next，但是这里 current.next
-    被赋值为 pre，因此为 current = next
+    成对的往结果列表里边 append
     '''
     def swapPairs(self, head):
-        n, new_head, last, pre, current = 1, None, None, None, head
-        while current:
-            next = current.next
+        dummy = tail = ListNode(None)
+        while head and head.next:
+            next = head.next.next
+            tail.next = tail = head.next
+            tail.next = tail = head
+            head = next
 
-            if n & 1:
-                pre = current
-            else:
-                current.next = pre
-                pre.next = next
+        if head:
+            tail.next = tail = head
 
-                if last:
-                    last.next = current
-
-                last = pre
-                new_head = new_head or current
-
-            current = next
-
-            n += 1
-
-        return new_head or head
+        tail.next = None
+        return dummy.next
 
 
 a = ListNode(1)

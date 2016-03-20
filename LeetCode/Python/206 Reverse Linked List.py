@@ -18,13 +18,13 @@ class Solution(object):
     遍历, 即 iteratively
     '''
     def reverseList(self, head):
-        current, pre, next = head, None, None
-        while current:
-            next = current.next
-            current.next = pre
-            pre = current
-            current = next
-        return pre
+        tail = None
+        while head:
+            next = head.next
+            head.next = tail
+            tail = head
+            head = next
+        return tail
 
 
 class Solution(object):

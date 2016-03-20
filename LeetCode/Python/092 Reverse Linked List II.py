@@ -29,43 +29,30 @@ class ListNode(object):
 class Solution(object):
     '''算法思路：
 
-    遍历一次，从 m 处开始反转，在 n 处停止反转，要注意的地方：
-      - 反转序列 与前后的衔接
-      - 新的序列 head 的获取
+    将整个列表分成三部分，对中间部分进行翻转
     '''
     def reverseBetween(self, head, m, n):
-        if m == n:
-            return head
+        firstHead = firstTail = ListNode(None)
+        secondHead = secondTail = ListNode(None)
 
-        i, current = 1, head
-        start_pre = start = pre = next = new_head = None
+        revHead, revTail, i = None, None, 1
+        while head:
+            next = head.next
 
-        while current:
-            next = current.next
+            if i < m:
+                firstTail.next = firstTail = head
+            elif i > n:
+                secondTail.next = secondTail = head
+            else:
+                head.next, revHead = revHead, head
+                if not revTail:
+                    revTail = head
 
-            if i + 1 == m:
-                start_pre = current
-
-            elif m <= i <= n:
-                if i == m:
-                    start = current
-                elif i == n:
-                    if start_pre:
-                        start_pre.next = current
-                        new_head = head
-                    else:
-                        new_head = current
-
-                    start.next = current.next
-
-                current.next = pre
-
-            pre = current
-            current = next
-
+            head = next
             i += 1
 
-        return new_head
+        firstTail.next, revTail.next = revHead, secondHead.next
+        return firstHead.next
 
 
 a = ListNode(1)

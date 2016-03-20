@@ -128,6 +128,110 @@ class Solution(object):
         return head
 
 
+class Solution(object):
+    '''算法思路：
+
+    类似于 merge sort，利用分而治之的思想
+
+    结果：AC
+    '''
+    def merge(self, l1, l2):
+        dummy = tail = ListNode(None)
+        while l1 and l2:
+            if l1.val < l2.val:
+                tail.next, tail, l1 = l1, l1, l1.next
+            else:
+                tail.next, tail, l2 = l2, l2, l2.next
+
+        tail.next = l1 or l2
+        return dummy.next
+
+    def mergeKLists(self, lists):
+        n = len(lists)
+        if n < 2:
+            return lists[0] if lists else None
+
+        if n == 2:
+            return self.merge(*lists)
+
+        mid = n >> 1
+        return self.merge(*map(self.mergeKLists, (lists[:mid], lists[mid:])))
+
+
+class MinHeap(object):
+    def __init__(self, heap):
+        self.heap = heap
+        self.build()
+
+    def heapify(self, root=0, end=None):
+        heap = self.heap
+        end = end or len(self.heap)
+
+        father = root
+        while 1:
+            son = 2 * father + 1
+            if son >= end:
+                break
+
+            if son + 1 < end and heap[son + 1].val < heap[son].val:
+                son += 1
+
+            if heap[son].val < heap[father].val:
+                heap[father], heap[son] = heap[son], heap[father]
+
+            father = son
+
+    def build(self):
+        for root in range(len(self.heap) >> 1, -1, -1):
+            self.heapify(root)
+
+    def push(self, node):
+        heap = self.heap
+
+        heap.append(node)
+        son = len(heap) - 1
+
+        while 1:
+            father = (son - 1) >> 1
+            if father < 0:
+                break
+
+            if heap[son].val < heap[father].val:
+                heap[father], heap[son] = heap[son], heap[father]
+
+            son = father
+
+    def pop(self):
+        top, tail = self.heap[0], self.heap.pop()
+        if self.heap:
+            self.heap[0] = tail
+            self.heapify()
+        return top
+
+    def empty(self):
+        return not bool(self.heap)
+
+
+class Solution(object):
+    '''算法思路：
+
+    维护一个大小为 len(lists) 的堆，每次取最小值 append 到列表最后
+
+    结果：AC
+    '''
+    def mergeKLists(self, lists):
+        heap = MinHeap(filter(None, lists))
+        dummy = tail = ListNode(None)
+
+        while not heap.empty():
+            tail.next = tail = heap.pop()
+            if tail.next:
+                heap.push(tail.next)
+
+        tail.next = None
+        return dummy.next
+
+
 def make_list(l):
     head, tail = None, None
     for v in l:

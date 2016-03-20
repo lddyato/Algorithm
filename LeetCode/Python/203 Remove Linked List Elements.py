@@ -15,26 +15,14 @@ Return: 1 --> 2 --> 3 --> 4 --> 5
 class Solution(object):
     '''算法思路：
 
-    找到要移除的 node 的前一个 pre，并把 pre.next 置为 node 的下一个不为 val 的 node
+    每次比较当前节点值与 val 是否相等，如果不相等则把他 append 列表结尾
     '''
     def removeElements(self, head, val):
-        while head and head.val == val:
+        dummy = tail = ListNode(None)
+        while head:
+            if head.val != val:
+                tail.next = tail = head
             head = head.next
 
-        current, pre, flag = head, None, False
-        while current:
-            if current.val == val:
-                flag = True
-            else:
-                if flag:
-                    pre.next = current
-                    flag = False
-
-                pre = current
-
-            current = current.next
-
-        if flag:
-            pre.next = None
-
-        return head
+        tail.next = None
+        return dummy.next

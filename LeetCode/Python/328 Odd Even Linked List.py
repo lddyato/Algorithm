@@ -28,28 +28,21 @@ class Solution(object):
     用两个指针分别把奇偶串起来，然后连接起来即可
     '''
     def oddEvenList(self, head):
-        if not head or not head.next:
-            return head
+        oddHead = oddTail = ListNode(None)
+        evenHead = evenTail = ListNode(None)
 
-        oddHead, oddTail, evenHead, evenTail, pre = (
-            head, head, head.next, head.next, None)
+        cnt = 1
+        while head:
+            if cnt & 1:
+                oddTail.next = oddTail = head
+            else:
+                evenTail.next = evenTail = head
 
-        while oddTail and oddTail.next:
-            next = oddTail.next
+            head = head.next
+            cnt += 1
 
-            oddTail.next = next.next
-            pre, oddTail = oddTail, next.next
-
-            evenTail.next = next
-            evenTail = next
-
-        evenTail.next = None
-        if oddTail:
-            oddTail.next = evenHead
-        else:
-            pre.next = evenHead
-
-        return oddHead
+        evenTail.next, oddTail.next = None, evenHead.next
+        return oddHead.next
 
 
 class ListNode(object):

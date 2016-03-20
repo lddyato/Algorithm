@@ -14,23 +14,16 @@ Given 1->1->2->3->3, return 1->2->3.
 
 
 class Solution(object):
-    '''算法思路：
+    """算法思路：
 
-    找到第一个重复的和第一个不重复的，连接起来即可
-    '''
+    每次比较当前节点的值是否与 tail 节点相等
+    """
     def deleteDuplicates(self, head):
-        pre, current = None, head
+        dummy = tail = ListNode(None)
+        while head:
+            if head.val != tail.val:
+                tail.next = tail = head
+            head = head.next
 
-        while current:
-            if not pre:
-                pre = current
-            elif pre.val != current.val:
-                pre.next = current
-                pre = current
-
-            current = current.next
-
-        if pre:
-            pre.next = None
-
-        return head
+        tail.next = None
+        return dummy.next

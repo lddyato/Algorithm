@@ -29,40 +29,32 @@ class Solution(object):
     通过快慢指针找到中间 node，然后将后半部分反转，最后将两个 part merge 起来
     '''
     def reorderList(self, head):
-        if not head:
+        if not (head and head.next):
             return
 
-        slow = fast = head
+        pre, slow, fast = None, head, head
         while fast and fast.next:
-            slow, fast = slow.next, fast.next.next
+            pre, slow, fast = slow, slow.next, fast.next.next
 
-        if slow and fast:
-            slow = slow.next
+        if fast:
+            pre, slow = slow, slow.next
 
-        rev, cursor = None, slow
-        while cursor:
-            rev, rev.next, cursor = cursor, rev, cursor.next
+        if pre:
+            pre.next = None
+
+        rev = None
+        while slow:
+            rev, rev.next, slow = slow, rev, slow.next
 
         tail, current = None, head
-        while current and current != slow:
+        while rev:
             next = current.next
-
-            if not tail:
-                tail = current
-            else:
+            if tail:
                 tail.next = current
-                tail = current
+            current.next, tail, rev, current = rev, rev, rev.next, next
 
-            if rev:
-                tail.next = rev
-                tail = rev
-
-                rev = rev.next
-
-            current = next
-
-        if tail:
-            tail.next = None
+        if current:
+            tail.next = current
 
 
 a = ListNode(1)

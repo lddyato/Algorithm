@@ -11,28 +11,28 @@ Return a deep copy of the list.
 class Solution(object):
     '''算法思路：
 
-    第一遍利用 hash 建立 {old_node: new_node} 的映射
-    第二遍将 new_node 中的 random 补充完整
+    第一遍利用 hash 建立 {label: node} 的映射
+    第二遍将 node 中的 random 补充完整
     '''
     def copyRandomList(self, head):
-        new_head, tail, current, record = None, None, head, {}
-        while current:
-            node = record.setdefault(current, RandomListNode(current.label))
+        record = {}
+        newHead = tail = None
 
-            if not new_head:
-                new_head = tail = node
+        current = head
+        while current:
+            node = RandomListNode(current.label)
+
+            if tail is None:
+                newHead = node
             else:
                 tail.next = node
-                tail = node
 
+            record[current.label] = tail = node
             current = current.next
 
-        current, new_current = head, new_head
-        while current:
-            random = current.random
-            if random:
-                new_current.random = record[random]
+        while head:
+            if head.random:
+                record[head.label].random = record[head.random.label]
+            head = head.next
 
-            current, new_current = current.next, new_current.next
-
-        return new_head
+        return newHead
