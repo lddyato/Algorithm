@@ -34,31 +34,105 @@ class Solution(object):
 
     Time: O(n*log(n))
     '''
-    def find(self, nums, k, start, end):
-        i, j = start + 1, end
+    def findKthLargest(self, nums, k):
+        pivot, n = nums[0], len(nums)
+        low, high = 0, n - 1
+
+        while low < high:
+            while low < n and nums[low] >= pivot:
+                low += 1
+            while high >= 0 and nums[high] < pivot:
+                high -= 1
+
+            if low > high:
+                break
+            nums[low], nums[high] = nums[high], nums[low]
+
+        nums[0], nums[high] = nums[high], nums[0]
+
+        if high + 1 < k:
+            return self.findKthLargest(nums[high + 1:], k - high - 1)
+
+        if high + 1 > k:
+            return self.findKthLargest(nums[:high], k)
+
+        return nums[high]
+
+
+class Solution(object):
+    '''算法思路：
+
+    利用堆维护前 k 大，最后堆顶即为所求
+
+    Time: O(k + n*log(k))
+    '''
+    def findKthLargest(self, nums, k):
+        heap = nums[:k]
+        heapq.heapify(heap)
+
+        for i in range(k, len(nums)):
+            heapq.heappushpop(heap, nums[i])
+
+        return heapq.heappop(heap)
+
+
+class MaxHeap(object):
+    def __init__(self, heap):
+        self.heap = heap
+        self.build()
+
+    def heapify(self, start, end):
+        father, heap = start, self.heap
+        while 1:
+            son = father * 2 + 1
+            if son > end:
+                break
+
+            if son + 1 <= end and heap[son + 1] > heap[son]:
+                son += 1
+
+            if heap[son] > heap[father]:
+                heap[son], heap[father] = heap[father], heap[son]
+
+            father = son
+
+    def build(self):
+        n = len(self.heap)
+        for start in range(n >> 1, -1, -1):
+            self.heapify(start, n - 1)
+
+    def push(self, num):
+        self.heap.append(num)
+        son, heap = len(self.heap) - 1, self.heap
 
         while 1:
-            while i <= end  and nums[i] >= nums[start]:
-                i += 1
-            while j > 0 and nums[j] < nums[start]:
-                j -= 1
-            if i >= j:
+            father = (son - 1) >> 1
+            if father < 0:
                 break
-            nums[i], nums[j] = nums[j], nums[i]
 
-        nums[start], nums[j] = nums[j], nums[start]
+            if heap[son] > heap[father]:
+                heap[son], heap[father] = heap[father], heap[son]
 
-        current = j - start + 1
-        if k == current:
-            return nums[j]
+    def pop(self):
+        top, tail = self.heap[0], self.heap.pop()
+        if self.heap:
+            self.heap[0] = tail
+            self.heapify(0, len(self.heap) - 1)
+        return top
 
-        return (
-            self.find(nums, k - current, j + 1, end)
-            if k > current else self.find(nums, k, start, j - 1)
-        )
 
+class Solution(object):
+    '''算法思路：
+
+    先生成一个堆，然后 pop 第 k 个
+
+    Time: O(n + k*log(n))
+    '''
     def findKthLargest(self, nums, k):
-        return self.find(nums, k, 0, len(nums) - 1)
+        heap = MaxHeap(nums)
+        for _ in range(k):
+            r = heap.pop()
+        return r
 
 
 s = Solution()

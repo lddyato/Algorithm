@@ -21,19 +21,21 @@ Note:
 class Solution(object):
     '''算法思路：
 
-    标记 t[i] 表示 primes[i] 出现的次数，每次比较是 dp[t[i]] * primes[i] 之间的比较
+    同 264 Ugly Number II
     '''
     def nthSuperUglyNumber(self, n, primes):
-        dp, t = [0] * n, [0] * len(primes)
+        k = len(primes)
+        dp, p = [1] * n, [0] * k
 
-        dp[0] = 1
-        for i in xrange(1, n):
-            dp[i] = min([dp[t[j]] * primes[j] for j in xrange(len(primes))])
+        for i in range(1, n):
+            candidates = [dp[p[j]] * primes[j] for j in range(k)]
+            dp[i] = min(candidates)
 
-            for j in xrange(len(primes)):
-                t[j] += dp[i] == dp[t[j]] * primes[j]
+            for j in range(k):
+                if dp[i] == candidates[j]:
+                    p[j] += 1
 
-        return dp[n - 1]
+        return dp[-1]
 
 
 s = Solution()
