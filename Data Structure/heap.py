@@ -1,9 +1,8 @@
 # -*- coding: utf-8 -*-
 
-"""
-    Heap - MinHeap and MaxHeap
+""" Heap - MinHeap and MaxHeap
 
-    You can also use builtin `heapq`.
+You can also use builtin `heapq`.
 """
 
 import operator

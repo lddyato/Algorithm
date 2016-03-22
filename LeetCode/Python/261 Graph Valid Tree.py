@@ -19,58 +19,48 @@ together in edges.
 '''
 
 
-class Solution(object):
+class UnionFind(object):
     '''算法思路：
 
-    根据题意，要成为一棵树，必须满足以下要求，缺一不可：
-      - 无闭环
+    根据题意，树是无环连通图，要成为一棵树，必须满足以下要求，缺一不可：
+      - 无闭环，即边数 e 和节点 n 满足 e = n - 1
       - 连通集个数为1
-      - 数的边数 e 和节点 n 满足 e = n - 1
-
-    所以一个节点也可以是一棵树
 
     使用并查集可以解决该类问题
     '''
-    def validTree(self, n, edges):
-        if not edges:
-            return n == 1
-
+    def __init__(self, n):
         self.id = range(n)
         self.size = [1] * n
-        self.record = {}
+        self.count = n
 
-        for num1, num2 in edges:
-            id1, id2 = map(self.find, (num1, num2))
+    def find(self, label):
+        while self.id[label] != label:
+            self.id[label] = label = self.id[self.id[label]]
+        return label
 
-            if num1 in self.record and num2 in self.record and id1 == id2:
-                return False
-
-            for num in (num1, num2):
-                self.record.setdefault(num, num)
-
-            self.union(id1, id2)
-
-        v = self.find(self.record.keys()[0])
-        for k in self.record:
-            if self.find(k) != v:
-                return False
-
-        return len(self.record) == n
-
-    def find(self, id):
-        while id != self.id[id]:
-            self.id[id] = self.id[self.id[id]]
-            id = self.id[id]
-        return id
-
-    def union(self, id1, id2):
-        r1, r2 = map(self.find, (id1, id2))
-        if r1 == r2:
+    def union(self, p, q):
+        pId, qId = map(self.find, (p, q))
+        if pId == qId:
             return
 
-        less, more = (r1, r2) if self.size[r1] < self.size[r2] else (r2, r1)
+        less, more = (
+            pId, qId) if self.size[pId] < self.size[qId] else (qId, pId)
+
         self.id[less] = self.id[more]
         self.size[more] += self.size[less]
+        self.count -= 1
+
+
+class Solution(object):
+    def validTree(self, n, edges):
+        if len(edges) != n - 1:
+            return False
+
+        unionFind = UnionFind(n)
+        for p, q in edges:
+            unionFind.union(p, q)
+
+        return unionFind.count == 1
 
 
 s = Solution()

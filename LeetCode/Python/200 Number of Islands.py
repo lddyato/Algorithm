@@ -30,57 +30,56 @@ Answer: 3
 
 
 class UnionFind(object):
-    '''算法思路：
+    def __init__(self, n):
+        self.id = range(n)
+        self.size = [1] * n
+        self.count = n
 
-    并查集
-    '''
-    def __init__(self, grid):
-        self.cols = len(grid[0])
-        self.size = [1] * (len(grid) * self.cols)
-        self.id = [
-            self.genIndex(i, j) if num == '1' else None
-            for i, row in enumerate(grid)
-            for j, num in enumerate(row)
-        ]
-        self.count = len(filter(lambda x: x is not None, self.id))
-
-    def genIndex(self, i, j):
-        return i * self.cols + j
-
-    def find(self, p):
-        while p != self.id[p]:
-            self.id[p] = self.id[self.id[p]]
-            p = self.id[p]
-        return p
+    def find(self, label):
+        while self.id[label] != label:
+            self.id[label] = label = self.id[self.id[label]]
+        return label
 
     def union(self, p, q):
-        idp, idq = map(self.find, (p, q))
-        if idp == idq:
+        pId, qId = map(self.find, (p, q))
+        if pId == qId:
             return
 
         less, more = (
-            (idp, idq) if self.size[idp] < self.size[idq] else (idq, idp))
+            pId, qId) if self.size[pId] < self.size[qId] else (qId, pId)
 
         self.id[less] = self.id[more]
-        self.size[more] += self.size[less]
-
+        self.size[more] = self.size[less]
         self.count -= 1
 
 
 class Solution(object):
+    '''算法思路：
+
+    并查集
+    '''
+    def genIndex(self, i, j, n):
+        return i * n + j
+
     def numIslands(self, grid):
-        if not grid:
-            return 0
+        m, n, count = len(grid), len(grid[0]) if grid else 0, 0
+        unionFind = UnionFind(m * n)
 
-        uf = UnionFind(grid)
+        for i, row in enumerate(grid):
+            for j, char in enumerate(row):
+                p = self.genIndex(i, j, n)
 
-        [uf.union(uf.genIndex(i, j), uf.genIndex(y, z))
-         for i, row in enumerate(grid)
-         for j, num in enumerate(row)
-         for x, y, z in [(i, i - 1, j), (j, i, j - 1)]
-         if num == '1' and x > 0 and grid[y][z] == '1']
+                if char == '0':
+                    count += 1
+                    continue
 
-        return uf.count
+                for x, y in ((0, -1), (-1, 0)):
+                    ii, jj = i + x, j + y
+
+                    if 0 <= ii < m and 0 <= jj < n and grid[ii][jj] == '1':
+                        unionFind.union(p, self.genIndex(ii, jj, n))
+
+        return unionFind.count - count
 
 
 s = Solution()

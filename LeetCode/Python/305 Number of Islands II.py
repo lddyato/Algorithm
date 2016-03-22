@@ -55,65 +55,47 @@ positions?
 
 
 class UnionFind(object):
-    def __init__(self, m, n, positions):
-        self.n = n
-        self.size = [0] * (m * n)
-        self.id = [None] * (m * n)
-        self.count = 0
+    def __init__(self, n):
+        self.id = range(n)
+        self.size = [1] * n
+        self.count = n
 
-    def genIndex(self, i, j):
-        return self.n * i + j
-
-    def add(self, i, j):
-        index = self.genIndex(i, j)
-
-        self.size[index] = 1
-        self.id[index] = index
-        self.count += 1
-
-    def find(self, p):
-        while p != self.id[p]:
-            self.id[p] = self.id[self.id[p]]
-            p = self.id[p]
-        return p
+    def find(self, label):
+        while self.id[label] != label:
+            self.id[label] = label = self.id[self.id[label]]
+        return label
 
     def union(self, p, q):
-        idp, idq = map(self.find, (p, q))
-        if idp == idq:
+        pId, qId = map(self.find, (p, q))
+        if pId == qId:
             return
 
         less, more = (
-            (idp, idq) if self.size[idp] < self.size[idq] else (idq, idp))
+            pId, qId) if self.size[pId] < self.size[qId] else (qId, pId)
 
         self.id[less] = self.id[more]
         self.size[more] += self.size[less]
-
         self.count -= 1
 
 
 class Solution(object):
     '''算法思路：
 
-    典型的并查集
+    并查集
     '''
     def numIslands2(self, m, n, positions):
-        uf, r = UnionFind(m, n, positions), []
+        grid = [[0] * n for _ in range(m)]
 
-        for i, j in positions:
-            uf.add(i, j)
-            index = uf.genIndex(i, j)
+        unionFind, r = UnionFind(m * n), []
+        for cnt, (i, j) in enumerate(positions, 1):
+            grid[i][j] = 1
 
-            neighbors = zip(
-                (j > 0, i > 0, j + 1 < n, i + 1 < m),
-                (uf.genIndex(x, y) for x, y in ((i, j - 1), (i - 1, j), (
-                    i, j + 1), (i + 1, j)))
-            )
+            for x, y in ((0, -1), (-1, 0), (0, 1), (1, 0)):
+                ii, jj = i + x, j + y
+                if 0 <= ii < m and 0 <= jj < n and grid[ii][jj]:
+                    unionFind.union(i * n + j, ii * n + jj)
 
-            [uf.union(index, neighbor) for condition, neighbor in neighbors
-             if condition and uf.id[neighbor] is not None]
-
-            r.append(uf.count)
-
+            r.append(unionFind.count - (m * n - cnt))
         return r
 
 

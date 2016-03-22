@@ -29,34 +29,37 @@ in edges.
 
 class UnionFind(object):
     def __init__(self, n):
-        self.count = n
-        self.size = [1] * n
         self.id = range(n)
+        self.size = [1] * n
+        self.count = n
 
-    def find(self, p):
-        while self.id[p] != p:
-            self.id[p] = self.id[self.id[p]]
-            p = self.id[p]
-        return p
+    def find(self, label):
+        while self.id[label] != label:
+            self.id[label] = label = self.id[self.id[label]]
+        return label
 
     def union(self, p, q):
-        idp, idq = map(self.find, (p, q))
-        if idp == idq:
+        pId, qId = map(self.find, (p, q))
+        if pId == qId:
             return
 
         less, more = (
-            (idp, idq) if self.size[idp] < self.size[idq] else (idq, idp))
+            pId, qId) if self.size[pId] < self.size[qId] else (qId, pId)
 
         self.id[less] = self.id[more]
         self.size[more] += self.size[less]
-
         self.count -= 1
 
 
 class Solution(object):
+    '''算法思路：
+
+    并查集
+    '''
     def countComponents(self, n, edges):
         unionFind = UnionFind(n)
-        [unionFind.union(*e) for e in edges]
+        for p, q in edges:
+            unionFind.union(p, q)
         return unionFind.count
 
 
