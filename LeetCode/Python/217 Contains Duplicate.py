@@ -27,6 +27,18 @@ class Solution(object):
         return False
 
 
+import collections
+
+
+class Solution(object):
+    '''算法思路：
+
+    同上
+    '''
+    def containsDuplicate(self, nums):
+        return any(cnt > 1 for cnt in collections.Counter(nums).values())
+
+
 class Solution(object):
     '''算法思路：
 

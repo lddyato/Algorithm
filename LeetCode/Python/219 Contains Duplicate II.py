@@ -17,8 +17,8 @@ class Solution(object):
     '''
     def containsNearbyDuplicate(self, nums, k):
         record = {}
-        for i, n in enumerate(nums):
-            if n in record and i - record[n] <= k:
+        for i, num in enumerate(nums):
+            if num in record and i - record[num] <= k:
                 return True
-            record[n] = i
+            record[num] = i
         return False

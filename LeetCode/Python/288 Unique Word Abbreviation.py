@@ -43,25 +43,18 @@ class ValidWordAbbr(object):
       word1 的 abbreviation 相同，则不是 unique
     '''
     def __init__(self, dictionary):
-        self.record = {}
-
+        self.table = collections.defaultdict(set)
         for word in dictionary:
-            abb = self.getAbb(word)
-            if word == abb:
-                continue
+            self.table[self.genAbb(word)].add(word)
 
-            [self.record.update({w: self.record.get(w, 0) + 1})
-             for w in (word, abb)]
-
-    def getAbb(self, word):
-        return word if len(word) < 3 else '{}{}{}'.format(
-            word[0], len(word) - 2, word[-1])
+    def genAbb(self, word):
+        return word if len(word) <= 2 else '{}{}{}'.format(
+                word[0], len(word) - 2, word[-1])
 
     def isUnique(self, word):
-        abb = self.getAbb(word)
-        return not (
-            word in self.record and self.record[abb] > 1 or
-            word not in self.record and abb in self.record)
+        key = self.genAbb(word)
+        return (key not in self.table or
+                word in self.table[key] and len(self.table[key]) == 1)
 
 
 vwa = ValidWordAbbr(['hello'])

@@ -24,23 +24,24 @@ lowercase letters separated by a single space.
 class Solution(object):
     '''算法思路：
 
+    用两个哈希表存储
+
     此题和《205 Isomorphic Strings》类似，都是一一对应
     '''
     def wordPattern(self, pattern, str):
-        record1, record2, str = {}, {}, str.split(' ')
-
-        if len(pattern) != len(str):
+        str = str.split(' ')
+        if len(pattern) - len(str):
             return False
 
+        t1, t2 = {}, {}
         for i, char in enumerate(pattern):
-            if char not in record1:
-                if str[i] in record2:
-                    return False
-                record1[char] = str[i]
-                record2[str[i]] = char
-            elif record1[char] != str[i]:
+            if char not in t1 and str[i] not in t2:
+                t1[char], t2[str[i]] = str[i], char
+            elif not (char in t1 and
+                    str[i] in t2 and
+                    t1[char] == str[i] and
+                    t2[str[i]] == char):
                 return False
-
         return True
 
 

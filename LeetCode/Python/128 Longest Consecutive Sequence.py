@@ -36,12 +36,86 @@ class Solution(object):
         return m
 
 
+class UnionFind(object):
+    def __init__(self, n):
+        self.id = range(n)
+        self.size = [1] * n
+        self.count = n
+
+    def find(self, label):
+        while self.id[label] != label:
+            self.id[label] = label = self.id[self.id[label]]
+        return label
+
+    def union(self, p, q):
+        pId, qId = map(self.find, (p, q))
+        if pId == qId:
+            return
+
+        less, more = (
+            pId, qId) if self.size[pId] < self.size[qId] else (qId, pId)
+
+        self.id[less] = self.id[more]
+        self.size[more] += self.size[less]
+        self.count -= 1
+
+
+class Solution(object):
+    '''算法思路：
+
+    并查集
+    '''
+    def longestConsecutive(self, nums):
+        nums = set(nums)
+        unionFind, record = UnionFind(len(nums)), {}
+
+        for i, num in enumerate(nums):
+            if num - 1 in record:
+                unionFind.union(i, record[num - 1])
+
+            if num + 1 in record:
+                unionFind.union(i, record[num + 1])
+
+            record[num] = i
+
+        return max(unionFind.size)
+
+
+class Solution(object):
+    '''算法思路：
+
+    用哈希表维护每个连续数列左右两端的信息，即 {num: [left, right, length]}
+
+    复杂度：O(n)
+    '''
+    def longestConsecutive(self, nums):
+        record, r = {}, 0
+        for num in set(nums):
+            cnt = record.get(
+                num - 1, [0] * 3)[-1] + record.get(num + 1, [0] * 3)[-1] + 1
+
+            if num - 1 not in record and num + 1 not in record:
+                record[num] = [num, num, cnt]
+            elif num - 1 in record and num + 1 in record:
+                record[record[num - 1][0]][1:] = [record[num + 1][1], cnt]
+                record[record[num + 1][1]][::2] = [record[num - 1][0], cnt]
+            elif num - 1 in record:
+                record[record[num - 1][0]][1:] = [num, cnt]
+                record[num] = [record[num - 1][0], num, cnt]
+            else:
+                record[record[num + 1][1]][::2] = [num, cnt]
+                record[num] = [num, record[num + 1][1], cnt]
+
+            r = max(r, cnt)
+        return r
+
+
 class Solution(object):
     '''算法思路：
 
     维护一个 {number: length} 的 hash，保证连续的序列最大最小值存储的是正确的 length
 
-    参考: https://leetcode.com/discuss/67390/my-simple-answer-in-python-real-o-n
+    参考了: https://leetcode.com/discuss/67390/my-simple-answer-in-python-real-o-n
 
     复杂度：O(n) 经提交测试，实际上该方法还没有上面方法效率高
     '''
@@ -68,59 +142,6 @@ class Solution(object):
             max_length = max(max_length, length)
 
         return max_length
-
-
-class Solution(object):
-    '''算法思路：
-
-    利用并查集来处理
-
-    Time: O(n)
-    '''
-    def longestConsecutive(self, nums):
-        if not nums:
-            return 0
-
-        length = len(nums)
-
-        self.id = range(length)
-        self.size = [1] * length
-        self.record = {}
-
-        for i, n in enumerate(nums):
-            if n in self.record:
-                continue
-
-            if n not in self.record:
-                self.record[n] = i
-
-            if n - 1 in self.record:
-                self.union(i, self.record[n - 1])
-
-            if n + 1 in self.record:
-                self.union(i, self.record[n + 1])
-
-        return max(self.size)
-
-    def find(self, id):
-        while id != self.id[id]:
-            self.id[id] = self.id[self.id[id]]
-            id = self.id[id]
-
-        return id
-
-    def union(self, id1, id2):
-        root1, root2 = map(self.find, (id1, id2))
-        if root1 == root2:
-            return
-
-        less, more = (
-            (root1, root2)
-            if self.size[root1] < self.size[root2]
-            else (root2, root1))
-
-        self.id[less] = self.id[more]
-        self.size[more] += self.size[less]
 
 
 s = Solution()

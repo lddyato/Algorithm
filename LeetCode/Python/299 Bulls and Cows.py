@@ -37,23 +37,48 @@ digits, and their lengths are always equal.
 '''
 
 
+import collections
+
+
 class Solution(object):
     '''算法思路：
 
     可以把这道题看成生产者消费者问题，secret 是生产者，guess 是消费者
     '''
     def getHint(self, secret, guess):
-        A, B, record = 0, 0, {}
+        A, B, record = 0, 0, collections.defaultdict(int)
         for i, s in enumerate(secret):
             g = guess[i]
             if s == g:
                 A += 1
             else:
-                numS, numG = record.get(s, 0), record.get(g, 0)
-                record[s], record[g] = numS + 1, numG - 1
-                B += (numS < 0) + (numG > 0)
+                B += (record[s] < 0) + (record[g] > 0)
+                record[s] += 1
+                record[g] -= 1
 
         return '{}A{}B'.format(A, B)
+
+
+class Solution(object):
+    '''算法思路：
+
+    算两边，第一次只算 A， 第二次只算 B
+    '''
+    def getHint(self, secret, guess):
+        bulls, caws, record, r = 0, 0, collections.Counter(secret), []
+        for i, num in enumerate(guess):
+            if num == secret[i]:
+                bulls += 1
+                record[num] -= 1
+            else:
+                r.append(i)
+
+        for i in r:
+            if record[guess[i]]:
+                caws += 1
+                record[guess[i]] -= 1
+
+        return '{}A{}B'.format(bulls, caws)
 
 
 s = Solution()
