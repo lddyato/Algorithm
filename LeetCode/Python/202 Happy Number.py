@@ -27,15 +27,18 @@ class Solution(object):
     如果不是 happy number，那么平方和循环为：4，16，37，58，89，145，42，20
     '''
     def isHappy(self, n):
-        if n in [1, 4]:
-            return n == 1
+        record = set()
+        while n not in record:
+            record.add(n)
 
-        s = 0
-        while n > 0:
-            n, mod = divmod(n, 10)
-            s += mod ** 2
+            sum = 0
+            while n > 0:
+                n, mod = divmod(n, 10)
+                sum += mod * mod
+            n = sum
 
-        return self.isHappy(s)
+        return n == 1
+
 
 s = Solution()
 print s.isHappy(19)

@@ -23,25 +23,22 @@ convert("PAYPALISHIRING", 3) should return "PAHNAPLSIIGYIR".
 class Solution(object):
     '''算法思路：
 
-    观察，把每一行保存到一个数组里边
+    观察可知，具有明显的周期性
     '''
     def convert(self, s, numRows):
-        if numRows < 1:
-            return ''
+        rows = range(numRows) + range(numRows - 2, 0, -1)
 
-        if numRows == 1:
-            return s
+        r, i, n = [[] for _ in range(numRows)], 0, len(s)
+        while i < n:
+            for row in rows:
+                if i >= n:
+                    break
 
-        rows, n  = [''] * min(numRows, len(s)), 2 * numRows - 2
+                r[row].append(s[i])
+                i += 1
 
-        for i, char in enumerate(s):
-            mod = i % n
-            if mod > n / 2:
-                mod = n - mod
+        return ''.join(map(''.join, r))
 
-            rows[mod] += char
-
-        return ''.join(rows)
 
 
 s = Solution()

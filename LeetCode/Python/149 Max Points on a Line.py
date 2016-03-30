@@ -28,31 +28,34 @@ class Solution(object):
             a, b = b, a % b
         return a
 
-    def maxPoints(self, points):
-        if not points:
-            return 0
+    def genLine(self, p1, p2):
+        a = p2.y - p1.y
+        b = p1.x - p2.x
+        c = p2.x * p1.y - p1.x * p2.y
 
+        if a < 0 or a == 0 and b < 0:
+            a, b, c = -a, -b, -c
+
+        _gcd = self.gcd(self.gcd(a, b), c)
+        return a // _gcd, b // _gcd, c / _gcd
+
+    def maxPoints(self, points):
         points = map(lambda p: (p.x, p.y), points)
 
-        counter, points, lines = (
-            collections.Counter(points), list(set(points)),
-            collections.defaultdict(set))
+        counter = collections.Counter(points)
+        lines = collections.defaultdict(set)
 
-        for i in xrange(len(points)):
-            for j in xrange(i + 1, len(points)):
-                (x1, y1), (x2, y2) = points[i], points[j]
+        distinctPoints, n = counter.keys(), len(counter)
+        if n < 3:
+            return len(points)
 
-                a, b, c = x1 - x2, y2 - y1, x2 * y1 - x1 * y2
-                if a < 0 or a == 0 and b < 0:
-                    a, b, c = -a, -b, -c
+        for i in range(n):
+            for j in range(i + 1, n):
+                pi, pj = distinctPoints[i], distinctPoints[j]
+                lines[self.genLine(Point(*pi), Point(*pj))] |= {pi, pj}
 
-                gcd = self.gcd(self.gcd(abs(a), abs(b)), abs(c))
-                lines[(a / gcd, b / gcd, c / gcd)] |= {points[i], points[j]}
-
-        return max([
-            sum([counter[p] for p in ps])
-            for ps in lines.values()
-        ] + counter.values())
+        return max(
+            sum([counter[p] for p in points]) for points in lines.values())
 
 
 class Point(object):

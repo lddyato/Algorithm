@@ -17,21 +17,26 @@ Note: The sequence of integers will be represented as a string.
 
 
 class Solution(object):
+    result = ['1']
+
+    def say(self, str):
+        i, n, r = 0, len(str), []
+        while i < n:
+            j = i + 1
+            while j < n and str[i] == str[j]:
+                j += 1
+            r.append('{}{}'.format(j - i, str[i]))
+            i = j
+        return ''.join(r)
+
     def countAndSay(self, n):
-        if n == 1:
-            return '1'
+        '''算法思路：
 
-        s, count, current, r = self.countAndSay(n - 1), 0, None, ''
-        for i, char in enumerate(s):
-            if i == 0 or i > 0 and char == s[i - 1]:
-                count += 1
-            else:
-                r += str(count) + current
-                count = 1
-
-            current = char
-
-        return r + str(count) + current
+        把每次中间计算的结果缓存起来，这样能够加快 test case
+        '''
+        for i in range(len(self.result), n):
+            self.result.append(self.say(self.result[-1]))
+        return self.result[-1]
 
 
 s = Solution()

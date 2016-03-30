@@ -13,21 +13,23 @@ class Solution(object):
     '''算法思路：
 
     在 Largest Rectangle in Histogram 的基础之上，每向下移动一行，同时更新 height
+
+    Time: O(m*n)
     '''
-    def rectangle(self, height):
+    def maxLineRectangle(self, heights):
         stack, r = [-1], 0
-        for i, h in enumerate(height):
-            while h < height[stack[-1]]:
-                r = max(height[stack.pop()] * (i - stack[-1] - 1), r)
+        for i, h in enumerate(heights):
+            while h < heights[stack[-1]]:
+                r = max(r, heights[stack.pop()] * (i - stack[-1] - 1))
             stack.append(i)
         return r
 
     def maximalRectangle(self, matrix):
-        height, r = [0] * ((matrix and len(matrix[0]) or 0) + 1), 0
+        heights, r = [0] * ((len(matrix[0]) if matrix else 0) + 1), 0
         for row in matrix:
-            for j, v in enumerate(row):
-                height[j] = height[j] + 1 if v == '1' else 0
-            r = max(self.rectangle(height), r)
+            for j, val in enumerate(row):
+                heights[j] = 0 if val == '0' else (heights[j] + 1)
+            r = max(r, self.maxLineRectangle(heights))
         return r
 
 

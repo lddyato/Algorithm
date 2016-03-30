@@ -11,17 +11,24 @@ Input is guaranteed to be within the range from 1 to 3999.
 
 
 class Solution(object):
-    def intToRoman(self, num):
-        values = (1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
-        chars = ('M', 'CM', 'D', 'CD', 'C', 'XC', 'L', 'XL', 'X', 'IX',
-                 'V', 'IV', 'I')
+    '''算法思路：
 
-        i, r = 0, ''
-        while i < len(values):
-            div, num = divmod(num, values[i])
-            r += chars[i] * div
-            i += 1
-        return r
+    按单位从大到小，依次过滤
+    '''
+    def intToRoman(self, num):
+        units = [(1000, 'M'), (900, 'CM'), (500, 'D'), (400, 'CD'), (100, 'C'),
+                 (90, 'XC'), (50, 'L'), (40, 'XL'), (10, 'X'), (9, 'IX'),
+                 (5, 'V'), (4, 'IV'), (1, 'I')]
+
+        r, pointer = [], 0
+        while num > 0:
+            while units[pointer][0] > num:
+                pointer += 1
+
+            times, num = divmod(num, units[pointer][0])
+            r.append(units[pointer][1] * times)
+
+        return ''.join(r)
 
 
 s = Solution()

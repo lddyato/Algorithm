@@ -23,19 +23,33 @@ class Solution(object):
 
     递归
     '''
-    def letterCombinations(self, digits):
-        maps = [
-            '', '', 'abc', 'def', 'ghi', 'jkl', 'mno', 'pqrs', 'tuv', 'wxyz']
 
-        if not digits:
+    maps = ['', '', 'abc', 'def', 'ghi', 'jkl', 'mno', 'pqrs', 'tuv', 'wxyz']
+
+    def letterCombinations(self, digits, i=0):
+        if i >= len(digits):
             return []
 
-        alphas = maps[int(digits[0])]
-        if len(digits) == 1:
-            return list(alphas)
+        return [
+            prefix + item
+            for prefix in self.maps[ord(digits[i]) - 48]
+            for item in self.letterCombinations(digits, i + 1) or ['']
+        ]
 
-        left = self.letterCombinations(digits[1:])
-        return [a + s for a in alphas for s in left] if alphas else left
+
+class Solution(object):
+    '''算法思路：
+
+    动态规划
+    '''
+    maps = ['', '', 'abc', 'def', 'ghi', 'jkl', 'mno', 'pqrs', 'tuv', 'wxyz']
+
+    def letterCombinations(self, digits):
+        dp = []
+        for char in digits:
+            dp = [prefix + candidates for prefix in dp or ['']
+                  for candidates in self.maps[ord(char) - 48]]
+        return dp
 
 
 s = Solution()

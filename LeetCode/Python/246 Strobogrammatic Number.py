@@ -15,21 +15,15 @@ For example, the numbers "69", "88", and "818" are all strobogrammatic.
 
 
 class Solution(object):
-    def isStrobogrammatic(self, num):
-        maps = {
-            '0': '0',
-            '1': '1',
-            '6': '9',
-            '8': '8',
-            '9': '6'
-        }
+    '''算法思路：
 
-        low, high = 0, len(num) - 1
-        while low <= high:
-            if num[low] not in maps or maps[num[low]] != num[high]:
+    哈希
+    '''
+    def isStrobogrammatic(self, num):
+        table, n = {'0': '0', '1': '1', '6': '9', '8': '8', '9': '6'}, len(num)
+        for i in range((n >> 1) + 1):
+            if num[i] not in table or table[num[i]] != num[n - i - 1]:
                 return False
-            low += 1
-            high -= 1
         return True
 
 

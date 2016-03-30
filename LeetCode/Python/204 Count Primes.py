@@ -11,34 +11,48 @@ Count the number of prime numbers less than a non-negative number, n.
 
 
 class Solution(object):
-    '''算法思想：
+    '''算法思路：
 
-    从奇数 3 从小到大遍历数组，将当前数的倍数在数组中标记为 None，一直这样下去，最后
-    数组中不为 None 的个数即为所求
+    依次计算是否是素数
 
-    利用的原理是：素数的倍数必不是素数
+    Time: O(n^2)
+
+    结果：TLE
+    '''
+    def isPrime(self, num):  # 费马小定理
+        primes = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41]
+        for p in primes:
+            if p != num and not pow(num, p - 1) % p == 1:
+                return False
+        return True
+
+    def isPrime(self, num):  # common way
+        for i in range(2, int(pow(num, 0.5)) + 1):
+            if not num % i:
+                return False
+        return True
+
+    def countPrimes(self, n):
+        return sum([self.isPrime(num) for num in range(n)])
+
+
+class Solution(object):
+    '''算法思路：
+
+    Sieve Of Eratosthenes，埃拉托斯特尼筛法，简称埃氏筛aishisaixuan
     '''
     def countPrimes(self, n):
-        if n < 3:
-            return 0
-
-        array = range(3, n, 2)
-
-        sqrt = int(pow(len(array), 0.5))
-        if sqrt * sqrt != len(array):
-            sqrt += 1
-
-        for i in xrange(sqrt):
-            num = array[i]
-            if not num:
+        nums = range(n)
+        for i in xrange(2, int(pow(n, 0.5)) + 1):
+            if nums[i] is None:
                 continue
 
-            times = num
-            while times * num < n:
-                array[(times * num - 3) / 2] = None
-                times += 2
+            times = i
+            while times * i < n:
+                nums[times * i] = None
+                times += 1
 
-        return len(filter(None, array)) + 1
+        return max(len(nums) - 2 - nums.count(None), 0)
 
 
 s = Solution()

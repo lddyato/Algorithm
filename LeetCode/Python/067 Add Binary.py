@@ -14,21 +14,28 @@ Return "100".
 
 
 class Solution(object):
-    def addBinary(self, a, b):
-        i, j, div, result = len(a) - 1, len(b) - 1, 0, ''
-        while i >= 0 or j >= 0:
-            x, y = int(a[i]) if i >= 0 else 0, int(b[j]) if j >= 0 else 0
-            div, mod = divmod(x + y + div, 2)
+    '''算法思路：
 
-            result = str(mod) + result
+    模拟加法运算
+    '''
+    def addBinary(self, a, b):
+        a, b = map(int, a), map(int, b)
+
+        i, j, r, mask = len(a) - 1, len(b) - 1, [], 0
+        while i >= 0 or j >= 0:
+            x = a[i] if i >= 0 else 0
+            y = b[j] if j >= 0 else 0
+
+            mask, val = divmod(x + y + mask, 2)
+            r.append(val)
 
             i -= 1
             j -= 1
 
-        if div:
-            result = str(div) + result
+        if mask:
+            r.append(mask)
 
-        return result
+        return ''.join(map(str, r[::-1]))
 
 
 s = Solution()

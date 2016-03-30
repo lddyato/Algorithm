@@ -13,24 +13,20 @@ but "(]" and "([)]" are not.
 
 
 class Solution(object):
+    '''算法思路；
+
+    因为其是成对出现的，因此用栈
+    '''
     def isValid(self, s):
-        lefts, rights = ('(', '{', '['), (')', '}', ']')
-        maps = dict(zip(lefts, rights))
-
-        stacks = []
+        stack, table = [], {')': '(', ']': '[', '}': '{'}
         for char in s:
-            if char in lefts:
-                stacks.append(char)
+            if char in {'(', '[', '{'}:
+                stack.append(char)
+            elif not stack or table[char] != stack[-1]:
+                return False
             else:
-                if not stacks or maps[stacks[-1]] != char:
-                    return False
-
-                del stacks[-1]
-
-        if stacks:
-            return False
-
-        return True
+                stack.pop()
+        return not stack
 
 
 s = Solution()

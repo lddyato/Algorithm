@@ -15,55 +15,52 @@ You may assume that there will be only one unique solution.
 class Solution(object):
     '''算法思路：
 
-    DFS，用 horizontal，vertical，grid 分别表示水平，垂直，宫格状态，然后从 0 到 80
-    一个一个尝试
+    DFS + 回溯，用 rows, cols, grids 分别表示水平，垂直，宫格状态，lack 表示还有几个格子
+    没填，也可以不用 lack，判断 i 是否 >= 9，即可以知道是否结束
     '''
-    def search(self, count, board, horizontal, vertical, grid):
-        while count < 81:
-            i, j = divmod(count, 9)
-            if board[i][j] == '.':
-                break
-            count += 1
-        else:
+    def dfs(self, board, i, j, rows, cols, grids):
+        if i >= 9:
             return True
 
-        for candidate in xrange(1, 10):
-            shift = 1 << candidate
-            if not (horizontal[i] & shift or vertical[j] & shift or
-                    grid[i/3][j/3] & shift):
+        if board[i][j] != '.':
+            return self.dfs(
+                board, i + (j + 1) // 9, (j + 1) % 9, rows, cols, grids)
+
+        for candidate in range(1, 10):
+            mask = 1 << candidate
+            if (rows[i] & mask) + (cols[j] & mask) + (
+                    grids[i//3][j//3] & mask) == 0:
 
                 board[i][j] = str(candidate)
-                horizontal[i] |= shift
-                vertical[j] |= shift
-                grid[i/3][j/3] |= shift
+                rows[i] |= mask
+                cols[j] |= mask
+                grids[i//3][j//3] |= mask
 
-                if self.search(count + 1, board, horizontal, vertical, grid):
+                if self.dfs(
+                        board, i + (j + 1)//9, (j + 1) % 9, rows, cols, grids):
                     return True
 
-                shift = ~shift
-
                 board[i][j] = '.'
-                horizontal[i] &= shift
-                vertical[j] &= shift
-                grid[i/3][j/3] &= shift
+                rows[i] &= ~mask
+                cols[j] &= ~mask
+                grids[i//3][j//3] &= ~mask
 
         return False
 
     def solveSudoku(self, board):
-        horizontal, vertical, grid = [1]*9, [1]*9, [[1]*3 for _ in xrange(3)]
-
+        rows, cols, grids = [0] * 9, [0] * 9, [[0] * 3 for _ in range(3)]
         for i, row in enumerate(board):
-            for j, val in enumerate(row):
-                if val == '.':
+            for j, char in enumerate(row):
+                if char == '.':
                     continue
 
-                shift = 1 << ord(val) - 48
+                mask = 1 << ord(char) - 48
 
-                horizontal[i] |= shift
-                vertical[j] |= shift
-                grid[i/3][j/3] |= shift
+                rows[i] |= mask
+                cols[j] |= mask
+                grids[i//3][j//3] |= mask
 
-        self.search(0, board, horizontal, vertical, grid)
+        self.dfs(board, 0, 0, rows, cols, grids)
 
 
 s = Solution()

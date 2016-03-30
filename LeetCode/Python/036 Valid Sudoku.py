@@ -20,35 +20,24 @@ filled cells need to be validated.
 class Solution(object):
     '''算法思路：
 
-    根据数独特性进行判断即可
+    根据数独特性进行判断即可, 每一行，每一列，每一个九宫格均不能有重复的
     '''
     def isValidSudoku(self, board):
-        N = 9
+        rows, cols = [[set() for _ in range(9)] for _ in range(2)]
+        grid = [[set() for _ in range(3)] for _ in range(3)]
 
-        for i in xrange(N):
-            record_row, record_col = {}, {}
+        for i, row in enumerate(board):
+            for j, num in enumerate(row):
+                if num == '.':
+                    continue
 
-            for j in xrange(N):
-                s_row, s_col = board[i][j], board[j][i]
-
-                record_row[s_row] = record_row.setdefault(s_row, 0) + 1
-                record_col[s_col] = record_col.setdefault(s_col, 0) + 1
-
-                if (s_row != '.' and record_row[s_row] > 1) or (
-                        s_col != '.' and record_col[s_col] > 1):
+                if (num in rows[i] or num in cols[j] or
+                        num in grid[i // 3][j // 3]):
                     return False
 
-        for i in xrange(0, 7, 3):
-            for j in xrange(0, 7, 3):
-                record = {}
-
-                for k in xrange(3):
-                    for l in xrange(3):
-                        s = board[i + k][j + l]
-                        record[s] = record.setdefault(s, 0) + 1
-                        if s != '.' and record[s] > 1:
-                            return False
-
+                rows[i].add(num)
+                cols[j].add(num)
+                grid[i // 3][j // 3].add(num)
         return True
 
 

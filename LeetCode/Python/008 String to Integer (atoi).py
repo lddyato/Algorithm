@@ -26,57 +26,35 @@ class Solution(object):
     注意 int 的范围 -2^31 ~ 2^31-1
     '''
     def myAtoi(self, str):
-        first, max, min = None, pow(2, 31) - 1, -pow(2, 31)
-        for i, c in enumerate(str):
-            if not c.isspace():
-                first = i
+        MAX_INT, MIN_INT = 2**31 - 1, -2**31
+
+        str = str.strip()
+        negative = -1 if (str and str[0] == '-') else 1
+
+        i = 0
+        if str and str[0] in ['-', '+']:
+            i += 1
+
+        r = []
+        while i < len(str):
+            if str[i].isdigit():
+                r.append(int(str[i]))
+            else:
                 break
+            i += 1
 
-        if first is None or (
-                str[first] not in ['-', '+'] and not str[first].isdigit()):
-            return 0
+        num, base = 0, 1
+        for i in range(len(r) - 1, -1, -1):
+            if negative == 1 and MAX_INT - base * r[i] <= num:
+                return MAX_INT
 
-        negative = False
-        if str[first] == '-':
-            negative = True
-            first += 1
-        elif str[first] == '+':
-            first += 1
+            if negative == -1 and MAX_INT + 1 - base * r[i] <= num:
+                return MIN_INT
 
-        end = first
-        while end < len(str):
-            if not str[end].isdigit():
-                break
-            end += 1
+            num += base * r[i]
+            base *= 10
 
-        if end == first:
-            return 0
-
-        end -= 1
-
-        while first <= end and str[first] == '0':
-            first += 1
-
-        if first > end:
-            return 0
-
-        sum, i = 0, 1
-        while end >= first:
-            plus = (ord(str[end]) - ord('0')) * i
-            if negative and -min - plus < sum:
-                return min
-
-            if not negative and max - plus < sum:
-                return max
-
-            sum += plus
-            i *= 10
-            end -= 1
-
-        if negative:
-            sum = -sum
-
-        return sum
+        return num * negative
 
 
 s = Solution()

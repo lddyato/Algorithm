@@ -15,24 +15,20 @@ class Solution(object):
     每次前进 1 步，比较每个 str 的相应位的值是否都相等
     '''
     def longestCommonPrefix(self, strs):
-        i, prefix = 0, ''
-        while 1:
+        prefix, i = [], 0
+        while strs:
             char = None
             for s in strs:
-                if i >= len(s):
-                    return prefix
+                if i >= len(s) or char is not None and s[i] != char:
+                    return ''.join(prefix)
 
-                char = char or s[i]
-                if char != s[i]:
-                    return prefix
+                if char is None:
+                    char = s[i]
 
-            if not char:
-                break
-
-            prefix += char
             i += 1
+            prefix.append(char)
 
-        return prefix
+        return ''.join(prefix)
 
 
 s = Solution()

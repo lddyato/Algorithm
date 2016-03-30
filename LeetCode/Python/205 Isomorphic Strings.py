@@ -30,16 +30,16 @@ class Solution(object):
     一一对应
     '''
     def isIsomorphic(self, s, t):
-        recordKey, recordValue = {}, {}
-        for i in xrange(len(s)):
-            if s[i] not in recordKey:
-                if t[i] in recordValue:
-                    return False
-                recordKey[s[i]], recordValue[t[i]] = t[i], s[i]
+        if len(s) != len(t):
+            return False
 
-            elif recordKey[s[i]] != t[i]:
+        table1, table2 = {}, {}
+        for i, char in enumerate(s):
+            if char not in table1 and t[i] not in table2:
+                table1[char], table2[t[i]] = t[i], char
+            elif not (char in table1 and t[i] in table2 and
+                    table1[char] == t[i] and table2[t[i]] == char):
                 return False
-
         return True
 
 

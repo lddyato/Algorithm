@@ -30,17 +30,17 @@ class Solution(object):
 
     找到共同点，利用 hash 把具有共同点的 word 并到一起
     '''
+    def genKey(self, word):
+        return ':'.join([
+            str((ord(word[i]) - ord(word[i - 1])) % 26)
+            for i in range(1, len(word))]
+        )
+
     def groupStrings(self, strings):
-        r, record = [], {}
-
+        r = collections.defaultdict(list)
         for s in strings:
-            key = '%s:' % len(s)
-            for char in s:
-                key += str((ord(char) - ord(s[0]) + 26) % 26)
-
-            record.setdefault(key, []).append(s)
-
-        return map(sorted, record.values())
+            r[self.genKey(s)].append(s)
+        return [sorted(l) for l in r.values()]
 
 
 s = Solution()

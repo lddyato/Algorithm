@@ -19,20 +19,16 @@ return 5.
 
 
 class Solution(object):
+    '''算法思路：
+
+    split，然后找到最后一个不为空的元素
+    '''
     def lengthOfLastWord(self, s):
-        i, l = len(s) - 1, 0
-
-        while i >= 0 and s[i] == ' ':
-            i -= 1
-
-        if i < 0:
-            return l
-
-        while i >= 0 and s[i] != ' ':
-            l += 1
-            i -= 1
-
-        return l
+        s = s.split(' ')
+        for i in range(len(s) - 1, -1, -1):
+            if s[i]:
+                return len(s[i])
+        return 0
 
 
 s = Solution()

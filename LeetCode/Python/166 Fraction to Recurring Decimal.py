@@ -17,42 +17,43 @@ For example,
 '''
 
 
+import collections
+
+
 class Solution(object):
     '''算法思路：
 
-    重要的一点是，哈希 key 为分子
+    用 hashtable 保存被除数，注意考虑 corner cases
+      - 负数
+      - 0
     '''
     def fractionToDecimal(self, numerator, denominator):
-        if denominator == 0:
-            return 2 ** 31 - 1
+        record = collections.OrderedDict()
+        genStr = lambda l: ''.join(map(str, l))
 
         sign = '-' if (
-            numerator > 0 and denominator < 0 or
-            numerator < 0 and denominator > 0
-        ) else ''
+            numerator < 0 and denominator > 0 or
+            numerator > 0 and denominator < 0) else ''
         numerator, denominator = map(abs, (numerator, denominator))
 
-        integer, numerator = divmod(numerator, denominator)
-        if not numerator:
-            return '{}{}'.format(sign, integer)
+        div, mod = divmod(numerator, denominator)
+        while mod and mod not in record:
+            record[mod], mod = divmod(mod * 10, denominator)
 
-        makeStr = lambda l: ''.join(map(str, l))
+        if not record:
+            return '{}{}'.format(sign, div)
 
-        sequence, hashTable, i = [], {}, 0
-        while numerator and numerator not in hashTable:
-            hashTable[numerator] = i
+        if mod not in record:
+            return '{}{}.{}'.format(sign, div, genStr(record.values()))
 
-            quotient, numerator = divmod(numerator * 10, denominator)
-            sequence.append(quotient)
+        first, second, flag = [], [], False
+        for k, v in record.items():
+            if k == mod:
+                flag = True
 
-            i += 1
+            (second if flag else first).append(v)
 
-        if not numerator:
-            return '{}{}.{}'.format(sign, integer, makeStr(sequence))
-
-        i = hashTable[numerator]
-        return '{}{}.{}({})'.format(
-            sign, integer, makeStr(sequence[:i]), makeStr(sequence[i:]))
+        return '{}{}.{}({})'.format(sign, div, genStr(first), genStr(second))
 
 
 s = Solution()

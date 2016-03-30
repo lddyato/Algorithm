@@ -14,40 +14,24 @@ class Solution(object):
     '''算法思路：
 
     从维基百科得到罗马数字的表示方式 https://en.wikipedia.org/wiki/Roman_numerals
+
+    只有 I, X, C 可以作为前缀
     '''
     def romanToInt(self, s):
-        maps = {
-            'I': 1,
-            'V': 5,
-            'X': 10,
-            'L': 50,
-            'C': 100,
-            'D': 500,
-            'M': 1000
-        }
+        maps = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}
+        combines = {'IV': 4, 'IX': 9, 'XL': 40, 'XC': 90, 'CD': 400, 'CM': 900}
+        specials = {'I', 'X', 'C'}
 
-        combins = {
-            'IV': 4,
-            'IX': 9,
-            'XL': 40,
-            'XC': 90,
-            'CD': 400,
-            'CM': 900
-        }
-
-        prefixs = ['I', 'X', 'C']
-
-        i, sum = 0, 0
-        while i < len(s):
-            if s[i] in prefixs and i + 1 < len(s) and s[i] + s[i+1] in combins:
-                sum += combins[s[i] + s[i+1]]
+        r, i, n = 0, 0, len(s)
+        while i < n:
+            if s[i] in specials and s[i:i + 2] in combines:
+                r += combines[s[i:i + 2]]
                 i += 2
-                continue
+            else:
+                r += maps[s[i]]
+                i += 1
+        return r
 
-            sum += maps[s[i]]
-            i += 1
-
-        return sum
 
 
 s = Solution()

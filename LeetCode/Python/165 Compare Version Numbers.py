@@ -24,32 +24,22 @@ Here is an example of version numbers ordering:
 
 
 class Solution(object):
+    '''算法思路：
+
+    占位比较，利用了占位思想
+    '''
     def compareVersion(self, version1, version2):
-        vs1, vs2 = version1.split('.'), version2.split('.')
-        len1, len2 = len(vs1), len(vs2)
+        version1, version2 = version1.split('.'), version2.split('.')
+        len1, len2 = map(len, (version1, version2))
 
         i = 0
-        while i < min(len1, len2):
-            if int(vs1[i]) < int(vs2[i]):
-                return -1
+        while i < max(len1, len2):
+            a = int(version1[i]) if i < len1 else 0
+            b = int(version2[i]) if i < len2 else 0
 
-            if int(vs1[i]) > int(vs2[i]):
-                return 1
-
-            i += 1
-
-        if len1 == len2:
-            return 0
-
-        more, less = vs1, vs2
-        if len1 < len2:
-            more, less = vs2, vs1
-
-        i = len(less)
-        while i < len(more):
-            if int(more[i]) != 0:
-                return [-1, 1][more == vs1]
-
+            r = cmp(a, b)
+            if r:
+                return r
             i += 1
 
         return 0
