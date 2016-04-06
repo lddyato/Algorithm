@@ -28,7 +28,28 @@ import collections
 class Solution(object):
     '''算法思路：
 
-    用队列，每次 pop 出来的对应当前 row 的一个元素
+    动态规划
+    '''
+    def minimumTotal(self, triangle):
+        n = len(triangle)
+
+        dp = [[float('inf')] * n for _ in range(n)]
+        dp[0][0] = triangle[0][0]
+
+        for i in range(1, n):
+            for j in range(i + 1):
+                dp[i][j] = min(
+                    dp[i - 1][j],
+                    dp[i - 1][j - 1]
+                ) + triangle[i][j]
+
+        return min(dp[-1])
+
+
+class Solution(object):
+    '''算法思路：
+
+    简化空间，用队列，每次 pop 出来的对应当前 row 的一个元素
     '''
     def minimumTotal(self, triangle):
         queue, MAX = collections.deque(), float('inf')

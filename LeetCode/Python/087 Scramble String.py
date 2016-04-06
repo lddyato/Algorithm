@@ -50,46 +50,41 @@ string of s1.
 '''
 
 
+def cache(f):
+    def method(obj, s1, s2):
+        key = '{}:{}'.format(s1, s2)
+        if key not in obj.cache:
+            obj.cache[key] = f(obj, s1, s2)
+        return obj.cache[key]
+    return method
+
+
 class Solution(object):
-    def cache(f):
-        def method(obj, s1, s2):
-            key = '{}:{}'.format(s1, s2)
-            if key not in obj.r:
-                obj.r[key] = f(obj, s1, s2)
-            return obj.r[key]
-        return method
+    '''算法思路：
+
+    分治法 + DFS，当左半部分长度分别为 1 到 length - 1 时，递归得到
+
+    s1[:l] - s2[:l] and s1[l:] - s2[l:]，或者
+    s1[:l] - s2[length - l:] and s1[l:] - s2[:length - l]
+
+    是不是匹配
+    '''
+    def __init__(self):
+        self.cache = {}
 
     @cache
-    def search(self, s1, s2):
-        if s1 == s2:
+    def isScramble(self, s1, s2):
+        if s1 == s2 or s1 == s2[::-1]:
             return True
 
-        length = len(s1)
-        for l in xrange(1, length):
-            if self.search(s1[:l], s2[:l]) and self.search(s1[l:], s2[l:]):
+        n = len(s1)
+        for i in range(1, n):
+            if (self.isScramble(s1[:i], s2[:i]) and
+                    self.isScramble(s1[i:], s2[i:]) or
+                    self.isScramble(s1[:i], s2[n - i:]) and
+                    self.isScramble(s1[i:], s2[:n - i])):
                 return True
-
-            if self.search(s1[:l], s2[length - l:]) and self.search(
-                    s1[l:], s2[:length - l]):
-                return True
-
         return False
-
-    def isScramble(self, s1, s2):
-        '''算法思路：
-
-        分治法 + DFS，当左半部分长度分别为 1 到 length - 1 时，递归得到
-
-        s1[:l] - s2[:l] and s1[l:] - s2[l:]，或者
-        s1[:l] - s2[length - l:] and s1[l:] - s2[:length - l]
-
-        是不是匹配
-        '''
-        if len(s1) != len(s2):
-            return False
-
-        self.r = {}
-        return self.search(s1, s2)
 
 
 s = Solution()

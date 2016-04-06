@@ -69,12 +69,16 @@ class Solution(object):
     '''
 
     dp = [0]
-
     def numSquares(self, n):
-        while len(self.dp) <= n:
+        MAX = float('inf')
+        candidates = [i ** 2 for i in range(1, int(n ** 0.5) + 1)]
+
+        for i in range(len(self.dp), n + 1):
             self.dp.append(min(
-                self.dp[len(self.dp) - i**2]
-                for i in xrange(1, int(len(self.dp)**0.5) + 1)) + 1)
+                self.dp[i - square] if i >= square else MAX
+                for square in candidates
+            ) + 1)
+
         return self.dp[n]
 
 

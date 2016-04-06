@@ -25,38 +25,38 @@ class TreeNode(object):
         self.right = None
 
 
+def cache(f):
+    def method(obj, i, j):
+        if not obj.dp[i][j]:
+            obj.dp[i][j] = f(obj, i, j)
+        return obj.dp[i][j]
+    return method
+
+
 class Solution(object):
     '''算法思路：
 
-    生成每一个子树的 BST
+    记忆化搜索
     '''
-    def generate(self, start, end):
-        if start > end:
-            return []
+    def generate(self, i, j):
+        if i > j:
+            return [None]
 
-        if start == end:
-            return [TreeNode(start)]
-
-        if start + 1 == end:
-            root1 = TreeNode(start)
-            root1.right = TreeNode(end)
-
-            root2 = TreeNode(end)
-            root2.left = TreeNode(start)
-
-            return [root1, root2]
+        if i == j:
+            return [TreeNode(i)]
 
         r = []
-        for i in xrange(start, end + 1):
-            leftTrees = self.generate(start, i - 1)
-            rightTrees = self.generate(i + 1, end)
-
-            for lt in leftTrees or [None]:
-                for rt in rightTrees or [None]:
-                    root = TreeNode(i)
-                    root.left, root.right = lt, rt
+        for k in range(i, j + 1):
+            for left in self.generate(i, k - 1):
+                for right in self.generate(k + 1, j):
+                    root = TreeNode(k)
+                    root.left, root.right = left, right
                     r.append(root)
         return r
 
     def generateTrees(self, n):
+        if n == 0:
+            return []
+
+        self.dp = [[None] * (n + 1) for _ in range(n)]
         return self.generate(1, n)

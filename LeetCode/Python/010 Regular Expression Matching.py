@@ -26,6 +26,51 @@ isMatch("aab", "c*a*b") → true
 '''
 
 
+def cache(f):
+    def method(obj, s, p):
+        key = '{}:{}'.format(s, p)
+        if key not in obj.cache:
+            obj.cache[key] = f(obj, s, p)
+        return obj.cache[key]
+    return method
+
+
+class Solution(object):
+    '''算法思路：
+
+    DFS + cache
+    '''
+    def __init__(self):
+        self.cache = {}
+
+    @cache
+    def isMatch(self, s, p):
+        m, n = map(len, (s, p))
+
+        if m == 0:
+            if n == 0:
+                return True
+            if n > 1 and p[1] == '*':
+                return self.isMatch(s, p[2:])
+            return False
+
+        if (m == 0) + (n == 0) == 1:
+            return False
+
+        if n > 1 and p[1] == '*':
+            if p[0] == '.' or s[0] == p[0]:
+                return (self.isMatch(s[1:], p[2:]) or
+                        self.isMatch(s[1:], p) or
+                        self.isMatch(s, p[2:]))
+
+            return self.isMatch(s, p[2:])
+
+        if p[0] == '.' or s[0] == p[0]:
+            return self.isMatch(s[1:], p[1:])
+
+        return False
+
+
 class Solution(object):
     '''算法思路：
 

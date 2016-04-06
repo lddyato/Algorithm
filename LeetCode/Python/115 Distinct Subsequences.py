@@ -58,15 +58,21 @@ class Solution(object):
     效率是上面写法的 10 倍左右
     '''
     def numDistinct(self, s, t):
-        m, n = map(len, (s, t))
-        dp = [[1] + [0] * n for _ in xrange(m + 1)]
+        m, n = map(len, (t, s))
+        dp = [[0] * (n + 1) for _ in range(m + 1)]
 
-        for i, char_s in enumerate(s, 1):
-            for j, char_t in enumerate(t, 1):
-                dp[i][j] = dp[i - 1][j] + (
-                    dp[i - 1][j - 1] if char_s == char_t else 0)
+        for j in range(n + 1):
+            dp[0][j] = 1
 
-        return dp[m][n]
+        for i in range(m):
+            for j in range(i, n):
+                if t[i] == s[j]:
+                    dp[i + 1][j + 1] = dp[i][j] + dp[i + 1][j]
+                else:
+                    dp[i + 1][j + 1] = dp[i + 1][j]
+
+        return dp[-1][-1]
+
 
 
 s = Solution()

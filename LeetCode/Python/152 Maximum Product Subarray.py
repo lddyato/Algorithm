@@ -36,18 +36,47 @@ class Solution(object):
 class Solution(object):
     '''算法思路：
 
-    维护两个变量，当前最小连续乘积 和 当前最大连续乘积，并且从最大连续乘积里边选出最大
-    的，这样做的原理是，当前最大连续乘积来源有三种，之前最大的乘以当前数，之前最小乘以
-    当前数，当前数
+    动态规划，维护目前最小值和最大值序列
+    maxValue[i] 表示前 i 个以第 i 个结尾的最大乘积
+    minValue[i] 表示前 i 个以第 i 个结尾的最小乘积
+
+    最大乘积 = max(maxValue[i - 1] * nums[i], minValue[i - 1] * nums[i], nums[i])
+    最小乘积 = mix(maxValue[i - 1] * nums[i], minValue[i - 1] * nums[i], nums[i])
+
+    中间过程中比较最大乘积即可
+
+    Time: O(n)
+    Space: O(n)
     '''
     def maxProduct(self, nums):
-        currentMax, currentMin, maximum = 1, 1, float('-inf')
-        for num in nums:
-            currentMax, currentMin = map(
-                lambda f: f(num, currentMax * num, currentMin * num),
-                (max, min))
-            maximum = max(maximum, currentMax)
-        return maximum
+        n, r = len(nums), nums[0]
+        maxValue, minValue = [nums[:1] + [0] * (n - 1) for _ in range(2)]
+
+        for i in range(1, n):
+            candidates = (
+                maxValue[i - 1] * nums[i], minValue[i - 1] * nums[i], nums[i])
+            maxValue[i], minValue[i] = max(candidates), min(candidates)
+            r = max(r, maxValue[i])
+        return r
+
+
+class Solution(object):
+    '''算法思路：
+
+    同上，不过不用数组，而是改用两个变量表示最大最小乘积值
+
+    Time: O(n)
+    Space: O(1)
+    '''
+    def maxProduct(self, nums):
+        n = len(nums)
+        r = maxValue = minValue = nums[0]
+
+        for i in range(1, n):
+            candidates = (minValue * nums[i], maxValue * nums[i], nums[i])
+            maxValue, minValue = max(candidates), min(candidates)
+            r = max(maxValue, r)
+        return r
 
 
 s = Solution()

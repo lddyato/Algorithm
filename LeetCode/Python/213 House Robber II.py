@@ -24,15 +24,17 @@ class Solution(object):
     可以分两种情况，nums[0] 选中 和 不选中，选中了那说明 nums[1] 和 nums[-1] 都不可
     以被选中，求 nums[2:-1] 的最大值即可，如果没选中，那么求 nums[1:] 的最大值即可
     '''
-    def _rob(self, nums):
-        fn_1 = fn_2 = 0
-        for i in xrange(len(nums)):
-            fn_1, fn_2 = max(fn_2 + nums[i], fn_1), fn_1
-        return fn_1
+    def robLine(self, nums):
+        dp = [0] * (len(nums) + 2)
+        for i, num in enumerate(nums, 2):
+            dp[i] = max(dp[i - 1], dp[i - 2] + num)
+        return dp[-1]
 
     def rob(self, nums):
-        return nums and max(
-            self._rob(nums[1:]), self._rob(nums[2:-1]) + nums[0]) or 0
+        if len(nums) == 1:
+            return nums[0]
+
+        return max(map(self.robLine, (nums[1:], nums[:-1])))
 
 
 s = Solution()

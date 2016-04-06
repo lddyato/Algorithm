@@ -79,6 +79,38 @@ class Solution(object):
 class Solution(object):
     '''算法思路：
 
+    同上，只不过加了cache
+
+    结果：勉强AC
+    '''
+    def cache(f):
+        def method(obj, s):
+            if s not in obj.cache:
+                obj.cache[s] = f(obj, s)
+            return obj.cache[s]
+        return method
+
+    @cache
+    def dfs(self, s):
+        if not s:
+            return 1
+
+        r = 0
+        for i in range(len(s)):
+            if 1 <= int(s[:i + 1]) <= 26:
+                r += self.dfs(s[i + 1:])
+            else:
+                break
+        return r
+
+    def numDecodings(self, s):
+        self.cache = {}
+        return self.dfs(s) if s else 0
+
+
+class Solution(object):
+    '''算法思路：
+
     利用 DP，dp[i] 表示从字符串开头到第 i 位(based 1) decode ways 个数，则从上往下
     需要过滤的条件是：
 
@@ -103,6 +135,25 @@ class Solution(object):
                 dp[i] = (dp[i-1] + dp[i-2]) if one else dp[i-2]
             elif 1 <= one <= 9:
                 dp[i] = dp[i-1]
+
+        return dp[-1]
+
+
+class Solution(object):
+    '''算法思路：
+
+    DP 的另外一种写法
+    '''
+    def numDecodings(self, s):
+        if not s or s[0] == '0':
+            return 0
+
+        dp = [1] * len(s)
+        for i in range(1, len(s)):
+            dp[i] = (
+                (dp[i - 2] if i - 2 >= 0 else 1)
+                if s[i - 1] != '0' and 1 <= int(s[i - 1:i + 1]) <= 26 else 0
+            ) + (dp[i - 1] if int(s[i]) else 0)
 
         return dp[-1]
 

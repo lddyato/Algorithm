@@ -19,11 +19,7 @@ class Solution(object):
     以最小的价格买入，以最大的价格卖出。
     '''
     def maxProfit(self, prices):
-        minPrice, maxPrice, profit = None, None, 0
-        for p in prices:
-            if minPrice is None or p < minPrice:
-                minPrice = maxPrice = p
-            elif p > maxPrice:
-                maxPrice = p
-            profit = max(profit, maxPrice - minPrice)
+        profit, buy = 0, prices[0] if prices else 0
+        for i in range(1, len(prices)):
+            profit, buy = max(prices[i] - buy, profit), min(prices[i], buy)
         return profit

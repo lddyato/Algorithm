@@ -26,6 +26,53 @@ isMatch("aab", "c*a*b") → false
 '''
 
 
+def cache(f):
+    def method(obj, s, p, i, j):
+        key = '{}:{}'.format(i, j)
+        if key not in obj.cache:
+            obj.cache[key] = f(obj, s, p, i, j)
+        return obj.cache[key]
+    return method
+
+
+class Solution(object):
+    '''算法思路：
+
+    DFS + cache
+    '''
+    def __init__(self):
+        self.cache = {}
+
+    @cache
+    def dfs(self, s, p, i, j):
+        m, n = map(len, (s, p))
+
+        if i == m and j == n:
+            return True
+
+        if i < m and j == n:
+            return False
+
+        if i == m and j < n:
+            return p[j] == '*' and self.dfs(s, p, i, j + 1)
+
+        if p[j] == '?' or s[i] == p[j]:
+            return self.dfs(s, p, i + 1, j + 1)
+
+        if p[j] == '*':
+            return (self.dfs(s, p, i, j + 1) or
+                    self.dfs(s, p, i + 1, j + 1) or
+                    self.dfs(s, p, i + 1, j))
+
+        return False
+
+    def isMatch(self, s, p):
+        if len(p) - p.count('*') > len(s):
+            return False
+
+        return self.dfs(s, p, 0, 0)
+
+
 class Solution(object):
     '''算法思路：
 
@@ -37,20 +84,20 @@ class Solution(object):
         if n - p.count('*') > m:
             return False
 
-        dp = [[False] * (n + 1) for _ in xrange(m + 1)]
+        dp = [[False] * (n + 1) for _ in range(m + 1)]
         dp[0][0] = True
 
-        for i in xrange(m + 1):
-            for j in xrange(1, n + 1):
-                if p[j - 1] != '*':
-                    dp[i][j] = (
-                        i > 0 and dp[i - 1][j - 1] and
-                        (p[j - 1] == '?' or p[j - 1] == s[i - 1])
-                    )
-                else:
-                    dp[i][j] = dp[i][j - 1] or dp[i - 1][j]
+        for j in range(n):
+            dp[0][j + 1] = p[j] == '*' and dp[0][j]
 
-        return dp[m][n]
+        for i in range(m):
+            for j in range(n):
+                if s[i] == p[j] or p[j] == '?':
+                    dp[i + 1][j + 1] = dp[i][j]
+                elif p[j] == '*':
+                    dp[i + 1][j + 1] = dp[i + 1][j] or dp[i][j] or dp[i][j + 1]
+
+        return dp[-1][-1]
 
 
 s = Solution()

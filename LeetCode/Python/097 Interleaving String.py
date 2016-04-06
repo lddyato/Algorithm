@@ -17,58 +17,68 @@ When s3 = "aadbbbaccc", return false.
 
 
 def cache(f):
-    def method(*args):
-        obj = args[0]
-        key = '{}:{}:{}'.format(*args[1:])
-
-        record = getattr(obj, 'record', {})
-        if not record:
-            setattr(obj, 'record', record)
-
-        if key not in record:
-            record[key] = f(*args)
-        return record[key]
+    def method(obj, s1, s2, s3, i, j, k):
+        key = (i, j, k)
+        if key not in obj.cache:
+            obj.cache[key] = f(obj, s1, s2, s3, i, j, k)
+        return obj.cache[key]
     return method
+
+
+class Solution(object):
+    def __init__(self):
+        self.cache = {}
+
+    @cache
+    def dfs(self, s1, s2, s3, i, j, k):
+        if i == len(s1) and j == len(s2) and k == len(s3):
+            return True
+
+        if (i < len(s1) and s1[i] == s3[k] and
+                self.dfs(s1, s2, s3, i + 1, j, k + 1)):
+            return True
+
+        if (j < len(s2) and s2[j] == s3[k] and
+                self.dfs(s1, s2, s3, i, j + 1, k + 1)):
+            return True
+
+        return False
+
+    def isInterleave(self, s1, s2, s3):
+        '''算法思路：
+
+        DFS + cache
+        '''
+        if sum(map(len, (s1, s2))) != len(s3):
+            return False
+        return self.dfs(s1, s2, s3, 0, 0, 0)
 
 
 class Solution(object):
     '''算法思路：
 
-    DFS + cache
+    动态规划，一般用 DFS + cache 的问题都可以用 DP
     '''
-    @cache
-    def search(self, i1, i2, i3):
-        if i1 >= len(self.s1) or i2 >= len(self.s2):
-            i, s = (i2, self.s2) if i1 >= len(self.s1) else (i1, self.s1)
-
-            while i < len(s):
-                if s[i] != self.s3[i3]:
-                    return False
-                i += 1
-                i3 += 1
-            return True
-
-        if self.s1[i1] == self.s2[i2] == self.s3[i3]:
-            if not self.search(i1 + 1, i2, i3 + 1):
-                return self.search(i1, i2 + 1, i3 + 1)
-            return True
-
-        if self.s1[i1] == self.s3[i3]:
-            return self.search(i1 + 1, i2, i3 + 1)
-
-        if self.s2[i2] == self.s3[i3]:
-            return self.search(i1, i2 + 1, i3 + 1)
-
-        return False
-
     def isInterleave(self, s1, s2, s3):
-        len1, len2, len3 = map(len, (s1, s2, s3))
-        if len3 != len1 + len2:
+        m, n, k = map(len, (s1, s2, s3))
+        if m + n != k:
             return False
 
-        self.s1, self.s2, self.s3 = s1, s2, s3
+        dp = [[False] * (n + 1) for _ in range(m + 1)]
 
-        return self.search(0, 0, 0)
+        for i in range(m + 1):
+            for j in range(n + 1):
+                if i + j == 0:
+                    dp[i][j] = True
+                    continue
+
+                if i - 1 >= 0 and dp[i - 1][j] and s1[i - 1] == s3[i + j - 1]:
+                    dp[i][j] = True
+
+                if j - 1 >= 0 and dp[i][j - 1] and s2[j - 1] == s3[i + j - 1]:
+                    dp[i][j] = True
+
+        return dp[-1][-1]
 
 
 s = Solution()

@@ -1,5 +1,28 @@
 # -*- coding: utf-8 -*-
 
+class Solution(object):
+    def uniquePathsWithObstacles(self, obstacleGrid):
+        m, n = len(obstacleGrid), len(obstacleGrid[0]) if obstacleGrid else 0
+        dp = [[0] * n for _ in range(m)]
+
+        for i in range(m):
+            if obstacleGrid[i][0]:
+                break
+            dp[i][0] = 1
+
+        for j in range(n):
+            if obstacleGrid[0][j]:
+                break
+            dp[0][j] = 1
+
+        for i in range(1, m):
+            for j in range(1, n):
+                if not obstacleGrid[i][j]:
+                    dp[i][j] = dp[i][j - 1] + dp[i - 1][j]
+
+        return dp[-1][-1]
+
+
 '''
 Unique Paths II
 ===============
@@ -32,26 +55,25 @@ class Solution(object):
     dp，凡是路过障碍物的统统设为 0
     '''
     def uniquePathsWithObstacles(self, obstacleGrid):
-        m, n = len(obstacleGrid), len(obstacleGrid[0])
+        m, n = map(len, (obstacleGrid, obstacleGrid[0]))
+        dp = [[0] * n for _ in range(m)]
 
-        dp = [[0] * n for _ in xrange(m)]
-
-        for i in xrange(m):
+        for i in range(m):
             if obstacleGrid[i][0]:
                 break
             dp[i][0] = 1
 
-        for j in xrange(n):
+        for j in range(n):
             if obstacleGrid[0][j]:
                 break
             dp[0][j] = 1
 
-        for i in xrange(1, m):
-            for j in xrange(1, n):
+        for i in range(1, m):
+            for j in range(1, n):
                 if not obstacleGrid[i][j]:
-                    dp[i][j] = dp[i - 1][j] + dp[i][j - 1]
+                    dp[i][j] = dp[i][j - 1] + dp[i - 1][j]
 
-        return dp[m - 1][n - 1]
+        return dp[-1][-1]
 
 
 s = Solution()
