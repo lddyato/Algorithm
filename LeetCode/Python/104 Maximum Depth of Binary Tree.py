@@ -14,18 +14,10 @@ node down to the farthest leaf node.
 class Solution(object):
     '''算法思路:
 
-    DFS，先序遍历
+    递归搜索
     '''
-    def dfs(self, root, depth=0):
-        if not root:
-            self.max = max(depth, self.max)
-            return
-
-        depth += 1
-        self.dfs(root.left, depth)
-        self.dfs(root.right, depth)
-
     def maxDepth(self, root):
-        self.max = 0
-        self.dfs(root)
-        return self.max
+        if not root:
+            return 0
+
+        return max(map(self.maxDepth, (root.left, root.right))) + 1

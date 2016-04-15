@@ -18,19 +18,18 @@ class Solution(object):
 
     分别递归找到左右子树的高度，然后比较是否最多相差 1，然后返回该节点的高度
     '''
-    def search(self, root):
-        if not self.balanced or not root:
+    def dfs(self, root):
+        if not root:
             return 0
 
-        left = self.search(root.left)
-        right = self.search(root.right)
-
+        left, right = self.dfs(root.left), self.dfs(root.right)
         if abs(left - right) > 1:
-            self.balanced = False
+            self.isBalanced = False
 
         return max(left, right) + 1
 
     def isBalanced(self, root):
-        self.balanced = True
-        self.search(root)
-        return self.balanced
+        self.isBalanced = True
+        self.dfs(root)
+        return self.isBalanced
+

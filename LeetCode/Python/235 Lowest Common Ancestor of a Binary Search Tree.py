@@ -26,18 +26,13 @@ itself according to the LCA definition.
 
 
 class Solution(object):
+    '''算法思路：
+
+    由于是二分查找树，因此找到第一个使得 p，q 分别在左右子树上的节点
+    '''
     def lowestCommonAncestor(self, root, p, q):
-        if not root:
-            return
+        if (root.val - p.val) * (root.val - q.val) <= 0:
+            return root
 
-        for m, n in [(p, q), (q, p)]:
-            if m.left == n or m.right == n:
-                return m
-
-        while root:
-            if root.val > max(p.val, q.val):
-                root = root.left
-            elif root.val < min(p.val, q.val):
-                root = root.right
-            else:
-                return root
+        return self.lowestCommonAncestor(
+            root.left if p.val < root.val else root.right, p, q)

@@ -65,6 +65,8 @@ class Solution(object):
     同上，不过把 dp 是 static 的，即是 class 的属性，这样做的原因是，对于 leetcode
     的各个 test case 不用每次都生成 numSquares(n) 的值
 
+    该题和《322 Coin Change》类似
+
     结果：AC
     '''
 

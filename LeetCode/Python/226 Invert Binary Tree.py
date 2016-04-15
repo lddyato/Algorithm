@@ -35,9 +35,7 @@ class Solution(object):
     '''
     def invertTree(self, root):
         if not root:
-            return
+            return root
 
-        root.left, root.right = root.right, root.left
-        map(self.invertTree, (root.left, root.right))
-
+        root.left, root.right = map(self.invertTree, (root.right, root.left))
         return root

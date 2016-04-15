@@ -32,27 +32,30 @@ Return 167
 class Solution(object):
     '''算法思路：
 
-    动态规划，设 dp[left][right] 为开区间 (left, right) 内最大 coins，则对于区间内
+    动态规划，设 dp[left][right] 为闭区间 [left, right] 内最大 coins，则对于区间内
     每一个元素 nums[i] (其中 left < i < right)，将 nums[i] 看做最后一个爆破的气球，
     则递推方程式为：
 
-    dp[l][r] = max(nums[l] * nums[i] * nums[r] + dp[l][i] + dp[i][r])
+    dp[l][r] = max(nums[l - 1] * nums[i] * nums[r + 1] + dp[l][i] + dp[i][r])
     '''
     def maxCoins(self, nums):
-        nums = [1] + filter(None, nums) + [1]
-        n = len(nums)
-        dp = [[0] * n for _ in xrange(n)]
+        if not nums:
+            return 0
 
-        for r in xrange(2, n):
-            for left in xrange(n - r):
-                right = left + r
-                for i in xrange(left + 1, right):
-                    dp[left][right] = max(
-                        dp[left][right],
-                        nums[left] * nums[i] * nums[right] +
-                        dp[left][i] + dp[i][right]
-                    )
-        return dp[0][n - 1]
+        nums, n = [1] + nums + [1], len(nums)
+        dp = [[0] * (n + 1) for _ in range(n + 1)]
+
+        for r in range(1, n + 1):
+            for i in range(1, n - r + 2):
+                left, right = i - 1, i + r
+                dp[i][i + r - 1] = max([
+                    (dp[i][k - 1] if i <= k - 1 else 0) +
+                    nums[left] * nums[k] * nums[right] +
+                    (dp[k + 1][i + r - 1] if k + 1 <= i + r - 1 else 0)
+                    for k in range(i, i + r)
+                ])
+
+        return dp[1][n]
 
 
 class Solution(object):

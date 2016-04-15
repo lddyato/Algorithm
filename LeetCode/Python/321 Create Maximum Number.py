@@ -235,6 +235,7 @@ class Solution(object):
             self.search(nums1, 0, len(nums1) - 1, nums2, 0, len(nums2) - 1, k))
 
 
+
 class Solution(object):
     '''算法思路:
 
@@ -244,67 +245,24 @@ class Solution(object):
     '''
     def choose(self, nums, k):
         stack, n = [], len(nums)
-
-        for i, num in enumerate(nums):
-            while n - i + len(stack) > k and stack and num > stack[-1]:
+        for i in range(n):
+            while stack and nums[i] > stack[-1] and len(stack) + n - i - 1 >= k:
                 stack.pop()
-            stack.append(num)
 
-        return stack[:k]
+            if len(stack) < k:
+                stack.append(nums[i])
 
-    def compare(self, nums1, nums2):
-        for i in xrange(len(nums1)):
-            if nums1[i] > nums2[i]:
-                return nums1
-            if nums1[i] < nums2[i]:
-                return nums2
-        return nums1
+        return stack
 
     def merge(self, nums1, nums2):
-        r, i1, i2 = [], 0, 0
-        while i1 < len(nums1) and i2 < len(nums2):
-            if nums1[i1] > nums2[i2]:
-                r.append(nums1[i1])
-                i1 += 1
-            elif nums1[i1] < nums2[i2]:
-                r.append(nums2[i2])
-                i2 += 1
-            else:
-                j1, j2, nextIs1 = i1, i2, False
-
-                while j1 < len(nums1) and j2 < len(nums2):
-                    if nums1[j1] == nums2[j2]:
-                        j1 += 1
-                        j2 += 1
-                        continue
-
-                    if nums1[j1] > nums2[j2]:
-                        nextIs1 = True
-                    break
-                else:
-                    if j1 < len(nums1):
-                        nextIs1 = True
-
-                if nextIs1:
-                    r.append(nums1[i1])
-                    i1 += 1
-                else:
-                    r.append(nums2[i2])
-                    i2 += 1
-
-        r += nums1[i1:] or nums2[i2:]
-        return r
+        return [max(nums1, nums2).pop(0) for _ in nums1 + nums2]
 
     def maxNumber(self, nums1, nums2, k):
-        m, n = len(nums1), len(nums2)
-
-        candidates = (
+        return max([
             self.merge(self.choose(nums1, i), self.choose(nums2, k - i))
-            for i in xrange(k + 1) if i <= m and k - i <= n
-        )
-
-        return self.merge(nums1, nums2) if k >= m + n else reduce(
-            self.compare, candidates, [float('-inf')] * k)
+            for i in range(k + 1)
+            if 0 <= i <= len(nums1) and 0 <= k - i <= len(nums2)
+        ])
 
 
 s = Solution()

@@ -47,42 +47,33 @@ class Solution(object):
 class Solution(object):
     '''算法思路：
 
-    同上，每次判断字串是否是回文字串花费了大量时间，先把结果缓存起来
+    动态规划，每次判断字串是否是回文字串花费了大量时间，先把结果缓存起来
+
+    dp[i]: 总共分为了几段
 
     结果：AC
     '''
     def minCut(self, s):
         n = len(s)
-        dp, record = [-1] * (n + 1), [[True] * n for _ in xrange(n)]
+        isPalindrome = [[False] * n for _ in range(n)]
 
-        # 计算每个子串是不是回文串是有技巧的，以步长从小到大的顺序，判断除去两端后剩下
-        # 的子串是否是回文即可
-        # for steps in xrange(n):
-        #     for i in xrange(0, n - steps):
-        #         record[i][i + steps] = (
-        #             steps < 2 or record[i + 1][i + steps - 1]) and (
-        #             s[i] == s[i + steps])
+        for r in range(1, n + 1):
+            for i in range(n - r + 1):
+                if r == 1:
+                    isPalindrome[i][i + r - 1] = True
+                    continue
 
-        for i in xrange(n):
-            r1 = r2 = 0
-            while i - r1 >= 0 and i + r1 < n:
-                record[i - r1][i + r1] = (
-                    (r1 == 0 or record[i - r1 + 1][i + r1 - 1]) and
-                    s[i - r1] == s[i + r1])
-                r1 += 1
+                isPalindrome[i][i + r - 1] = (
+                    isPalindrome[i + 1][i + r - 2] if r >= 3 else True
+                ) and s[i] == s[i + r - 1]
 
-            while i - r2 >= 0 and i + 1 + r2 < n:
-                record[i - r2][i + 1 + r2] = (
-                    (r2 == 0 or record[i - r2 + 1][i + r2]) and
-                    s[i - r2] == s[i + 1 + r2])
-                r2 += 1
+        dp = range(n + 1)
+        for i in range(2, n + 1):
+            for j in range(i, 0, -1):
+                if isPalindrome[j - 1][i - 1]:
+                    dp[i] = min(dp[i], dp[j - 1] + 1)
+        return dp[-1] - 1
 
-        for i in xrange(1, n + 1):
-            dp[i] = min(
-                dp[j - 1] + 1 for j in xrange(i, 0, -1) if record[j - 1][i - 1]
-            )
-
-        return dp[n]
 
 
 class Solution(object):
