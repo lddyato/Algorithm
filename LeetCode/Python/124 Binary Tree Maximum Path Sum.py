@@ -26,25 +26,19 @@ class Solution(object):
 
     后序遍历，返回经过 root 的不拐弯的最大 sum，中间记录最值
     '''
-    def search(self, root):
+    def dfs(self, root):
         if not root:
             return 0
 
-        # leetcode 上面这样写会出现错误
-        # left, right = map(self.search, (root.left, root.right))
-        left, right = self.search(root.left), self.search(root.right)
-
-        m = max(root.val, left + root.val, right + root.val)
-        self.r = max([
-            self.r, m, left + right + root.val
-        ] + ([left] if root.left else []) + ([right] if root.right else []))
-
-        return m
+        left, right = self.dfs(root.left), self.dfs(root.right)
+        val = max(root.val, root.val + left, root.val + right)
+        self.maxSum = max(self.maxSum, val, left + root.val + right)
+        return val
 
     def maxPathSum(self, root):
-        self.r = float('-inf')
-        self.search(root)
-        return self.r
+        self.maxSum = float('-inf')
+        self.dfs(root)
+        return self.maxSum
 
 
 class TreeNode(object):

@@ -25,32 +25,19 @@ return its level order traversal as:
 ]
 '''
 
-
 class Solution(object):
-    '''算法思路：
-
-    BFS，队列里边包含当前 level 值
-    '''
     def levelOrder(self, root):
         if not root:
             return []
 
-        queue, result = [(root, 0)], []
-        while queue:
-            node, level = queue.pop(0)
+        r = [[root]]
+        while r[-1]:
+            r.append([
+                child for node in r[-1]
+                for child in (node.left, node.right) if child
+            ])
 
-            if level > len(result) - 1:
-                result.append([node.val])
-            else:
-                result[level].append(node.val)
-
-            if node.left:
-                queue.append((node.left, level + 1))
-
-            if node.right:
-                queue.append((node.right, level + 1))
-
-        return result
+        return [map(lambda n: n.val, item) for item in r[:-1]]
 
 
 class Solution(object):

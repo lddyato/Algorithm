@@ -29,11 +29,9 @@ class Solution(object):
         if not root:
             return []
 
-        queue, r = [root], []
-        while queue:
-            for i in xrange(len(queue)):
-                peek = queue.pop(0)
-                if not i:
-                    r.append(peek.val)
-                [queue.append(c) for c in (peek.right, peek.left) if c]
-        return r
+        r = [[root]]
+        while r[-1]:
+            r.append([
+                c for node in r[-1] for c in (node.left, node.right) if c])
+
+        return map(lambda item: item[-1].val, r[:-1])

@@ -62,6 +62,10 @@ class Solution(object):
 
 
 class Solution(object):
+    '''算法思路：
+
+    先访问该节点，然后访问右节点，最后访问左子树
+    '''
     def connect(self, root):
         if not (root and root.left):
             return
@@ -70,4 +74,5 @@ class Solution(object):
         if root.next:
             root.right.next = root.next.left
 
-        map(self.connect, (root.left, root.right))
+        self.connect(root.right)
+        self.connect(root.left)

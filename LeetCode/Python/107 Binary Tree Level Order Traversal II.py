@@ -25,23 +25,19 @@ return its bottom-up level order traversal as:
 
 
 class Solution(object):
+    '''算法思路：
+
+    BFS
+    '''
     def levelOrderBottom(self, root):
         if not root:
             return []
 
-        queue, result = [root], []
-        while queue:
-            sublist, levelNum = [], len(queue)
+        r = [[root]]
+        while r[-1]:
+            r.append([
+                child for node in r[-1]
+                for child in (node.left, node.right) if child
+            ])
 
-            for i in xrange(levelNum):
-                node = queue.pop(0)
-                sublist.append(node.val)
-
-                if node.left:
-                    queue.append(node.left)
-
-                if node.right:
-                    queue.append(node.right)
-
-            result.append(sublist)
-        return result[::-1]
+        return [map(lambda n: n.val, item) for item in r[:-1]][::-1]

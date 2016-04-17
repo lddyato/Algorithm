@@ -38,3 +38,31 @@ class Solution(object):
             if r[i].val < r[i - 1].val:
                 one, two = one or r[i - 1], r[i]
         one.val, two.val = two.val, one.val
+
+
+class Solution(object):
+    '''算法思路：
+
+    同上，只不过再遍历的过程中寻找两个节点
+
+    Space: O(1)
+    '''
+    def dfs(self, root):
+        if not root:
+            return
+
+        self.dfs(root.left)
+        if root.val < self.pre.val:
+            self.first = self.first or self.pre
+            self.second = root
+
+        self.pre = root
+        self.dfs(root.right)
+
+    def recoverTree(self, root):
+        self.first = None
+        self.second = None
+        self.pre = TreeNode(float('-inf'))
+
+        self.dfs(root)
+        self.first.val, self.second.val = self.second.val, self.first.val

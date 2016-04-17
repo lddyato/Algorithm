@@ -21,33 +21,19 @@ class Solution(object):
 
     分别递归查看左右结构是否满足定义
     '''
-    def traverse(self, root):
-        if not (root.left or root.right):
-            return True, root.val, root.val
+    def dfs(self, root):
+        if not root:
+            return float('-inf'), float('inf')
 
-        rMin, rMax = float('inf'), float('-inf')
+        maxL, minL = self.dfs(root.left)
+        maxR, minR = self.dfs(root.right)
 
-        if root.left:
-            isValid, minimum, maximum = self.traverse(root.left)
+        if maxL >= root.val or minR <= root.val:
+            self.r = False
 
-            if not isValid or maximum >= root.val:
-                return False, 0, 0
-
-            rMin, rMax = min(rMin, minimum), max(rMax, root.val)
-
-        if root.right:
-            isValid, minimum, maximum = self.traverse(root.right)
-
-            if not isValid or minimum <= root.val:
-                return False, 0, 0
-
-            rMin, rMax = min(rMin, root.val), max(rMax, maximum)
-
-        return True, rMin, rMax
+        return max(maxR, root.val), min(minL, root.val)
 
     def isValidBST(self, root):
-        if not root:
-            return True
-
-        r, _, _ = self.traverse(root)
-        return r
+        self.r = True
+        self.dfs(root)
+        return self.r

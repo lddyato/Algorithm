@@ -38,34 +38,34 @@ class Codec(object):
     '''算法思路：
 
     利用 BFS 生成类似 leetcode 上面用的二叉树表示的格式
-    比如: 1:2:3:x:x:4:5:x:x:x:x
+    比如: 1:2:3:#:#:#:5:#:#:#:#
     '''
     def buildNode(self, val):
-        return TreeNode(int(val)) if val != 'x' else None
+        return None if val == '#' else TreeNode(int(val))
 
     def serialize(self, root):
         queue = [root]
-        [map(queue.append, (node.left, node.right)) for node in queue if node]
-        return ':'.join(map(lambda n: n and str(n.val) or 'x', queue))
+        for node in queue:
+            if not node:
+                continue
+            queue += [node.left, node.right]
+
+        return ':'.join(
+            map(lambda item: str(item.val) if item else '#', queue))
 
     def deserialize(self, data):
-        queue, i, data = collections.deque(), 0, data.split(':')
+        parts = data.split(':')
+        root = self.buildNode(parts[0])
+        queue, i = collections.deque([root]), 1
 
-        while i < len(data):
-            if not queue:
-                root = self.buildNode(data[i])
-                queue.append(root)
-                i += 1
-                continue
-
-            for _ in xrange(len(queue)):
-                node = queue.popleft()
-                node.left, node.right = [
-                    self.buildNode(data[i + j]) for j in xrange(2)]
-
-                [queue.append(c) for c in (node.left, node.right) if c]
+        while queue:
+            node = queue.popleft()
+            if node:
+                node.left, node.right = map(
+                    self.buildNode, (parts[i], parts[i + 1]))
+                queue.append(node.left)
+                queue.append(node.right)
                 i += 2
-
         return root
 
 

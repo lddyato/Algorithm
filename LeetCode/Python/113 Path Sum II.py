@@ -26,24 +26,28 @@ return
 ]
 '''
 
-import itertools
-
 
 class Solution(object):
     '''算法思路：
 
     递归遍历即可
     '''
-    def pathSum(self, root, sum):
+    def dfs(self, root, sum_):
         if not root:
             return []
 
-        if not (root.left or root.right) and sum == root.val:
-            return [[root.val]]
+        if not (root.left or root.right):
+            return [[root.val]] if root.val == sum_ else []
 
-        return [[root.val] + p for p in itertools.chain(
-                *[self.pathSum(c, sum - root.val) for c in (
-                    root.left, root.right)])]
+        return [
+            [root.val] + p for p in sum([
+                self.dfs(c, sum_ - root.val)
+                for c in (root.left, root.right)
+            ], [])
+        ]
+
+    def pathSum(self, root, sum_):
+        return self.dfs(root, sum_)
 
 
 class TreeNode(object):

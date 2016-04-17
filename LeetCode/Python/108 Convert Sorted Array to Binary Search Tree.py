@@ -14,19 +14,12 @@ class Solution(object):
 
     中间的为 root
     '''
-    def sortedArrayToBST(self, nums, start=0, end=None):
-        end = (len(nums) - 1) if end is None else end
+    def sortedArrayToBST(self, nums):
+        if not nums:
+            return None
 
-        if start > end:
-            return
-        if start == end:
-            return TreeNode(nums[start])
-
-        mid = (start + end) / 2
-
+        mid = len(nums) >> 1
         root = TreeNode(nums[mid])
-        root.left, root.right = (
-            self.sortedArrayToBST(nums, start, mid - 1),
-            self.sortedArrayToBST(nums, mid + 1, end))
-
+        root.left, root.right = self.sortedArrayToBST(
+            nums[:mid]), self.sortedArrayToBST(nums[mid + 1:])
         return root
