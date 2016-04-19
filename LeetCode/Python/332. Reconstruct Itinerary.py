@@ -30,6 +30,10 @@ import collections
 
 
 class Solution(object):
+    '''算法思路：
+
+    DFS
+    '''
     def dfs(self, from_, graph, path):
         if not graph or self.r:
             self.r = self.r or path

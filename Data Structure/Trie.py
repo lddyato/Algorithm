@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-# @Author: Lime
-# @Date:   2016-04-15 16:20:10
-# @Last Modified by:   Lime
-# @Last Modified time: 2016-04-15 16:26:14
 
+'''
+Trie
+====
+
+字典树：https://en.wikipedia.org/wiki/Trie
+'''
 
 class TrieNode(object):
     def __init__(self):
