@@ -90,15 +90,14 @@ class Treap(object):
         return root
 
     def traverse(self):
-        if not self.root:
-            return
-
         queue = [self.root]
         while queue:
             print queue
             for _ in range(len(queue)):
                 node = queue.pop(0)
-                [queue.append(c) for c in (node.left, node.right) if c]
+                if not node:
+                    continue
+                [queue.append(c) for c in (node.left, node.right)]
 
 
 if __name__ == '__main__':

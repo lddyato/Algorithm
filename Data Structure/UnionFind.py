@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 
-""" Union Find - Weighted Quick-Union With Path Compression
+"""
+并查集
+=====
+
+Union Find - Weighted Quick-Union With Path Compression
 
 N nodes labled from 0 to N-1.
 
@@ -11,6 +15,8 @@ Mainly two operations:
 Two data property:
   - id: the label i's group id
   - size: the label i's group size
+
+wikipedia: https://en.wikipedia.org/wiki/Disjoint-set_data_structure
 """
 
 
