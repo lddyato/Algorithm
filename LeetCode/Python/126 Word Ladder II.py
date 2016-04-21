@@ -115,6 +115,70 @@ class Solution(object):
         return self.dfs(root, depth, endWord)
 
 
+'======================================================================='
+
+
+import collections
+import string
+
+# 一行代码实现一棵树
+tree = lambda: collections.defaultdict(tree)
+
+
+def genPath(root, prefix=None):
+    r = [[key] + path for key in root for path in genPath(root[key]) or [[]]]
+
+    if prefix:
+        r = [[prefix] + path for path in r or [[]]]
+
+    return r
+
+
+class Solution(object):
+    '''方法思路：
+
+    two-end BFS，双端BFS，搜索的同时跟踪记录 path
+
+    效率非常高
+    '''
+    def findLadders(self, beginWord, endWord, wordlist):
+        forward, backward = [{beginWord: tree()}], [{endWord: tree()}]
+        while forward[-1] and backward[-1]:
+            if len(forward[-1]) > len(backward[-1]):
+                forward, backward = backward, forward
+
+            next, trash, r = tree(), set(), []
+            for word in forward[-1]:
+                for i in xrange(len(word)):
+                    first, second = word[:i], word[i + 1:]
+
+                    for char in string.ascii_lowercase:
+                        candidate = first + char + second
+
+                        if candidate in backward[-1]:
+                            paths1 = genPath(forward[-1][word], word)
+                            paths2 = genPath(
+                                backward[-1][candidate], candidate)
+
+                            if paths2[-1][-1] == beginWord:
+                                paths1, paths2 = paths2, paths1
+
+                            r += [
+                                p1[::-1] + p2
+                                for p1 in paths1 for p2 in paths2
+                            ]
+
+                        if candidate in wordlist:
+                            trash.add(candidate)
+                            next[candidate][word] = forward[-1][word]
+            if r:
+                return r
+
+            wordlist -= trash
+            forward.append(next)
+        return []
+
+
 s = Solution()
 print s.findLadders('hit', 'cog', {"hot","dot","dog","lot","log"})
 print s.findLadders("red", "tax", {"ted","tex","red","tax","tad","den","rex","pee"})
