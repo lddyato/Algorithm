@@ -30,36 +30,37 @@ class Solution(object):
 
     DFS
     '''
-    def search(self, board, word, visited, i, j, m, n):
-        if not word:
+    def dfs(self, board, m, n, i, j, word, p):
+        '''
+        Params:
+          - board: 当前 board 状态，已经访问过的设置为 None
+          - m: board 行数
+          - n: board 列数
+          - i: 当前遍历的的地方行数
+          - j: 当前遍历到的地方列数
+          - word: 查询的单词
+          - p: 当前查询 word 的第几个字母
+        '''
+        if p >= len(word):
             return True
 
-        visited[i][j] = 1
-
-        for x, y in ((0, -1), (-1, 0), (0, 1), (1, 0)):
+        char, board[i][j] = board[i][j], None
+        for x, y in ((0, 1), (-1, 0), (0, -1), (1, 0)):
             ii, jj = i + x, j + y
-            if (0 <= ii < m and 0 <= jj < n and board[ii][jj] == word[0] and
-                    not visited[ii][jj]):
-                visited[ii][jj] = 1
+            if (0 <= ii < m and 0 <= jj < n and board[ii][jj] == word[p] and
+                    self.dfs(board, m, n, ii, jj, word, p + 1)):
+                return True
 
-                if self.search(board, word[1:], visited, ii, jj, m, n):
-                    return True
-
-                visited[ii][jj] = 0
-
-        visited[i][j] = 0
+        board[i][j] = char
         return False
 
     def exist(self, board, word):
-        m, n = len(board), len(board[0])
-        visited = [[0] * n for _ in xrange(m)]
-
-        return any(
-            self.search(board, word[1:], visited, i, j, m, n)
-            for i, row in enumerate(board)
-            for j, char in enumerate(row)
-            if word[0] == char
-        )
+        m, n = map(len, (board, board[0]))
+        for i, row in enumerate(board):
+            for j, char in enumerate(row):
+                if char == word[0] and self.dfs(board, m, n, i, j, word, 1):
+                    return True
+        return False
 
 
 s = Solution()

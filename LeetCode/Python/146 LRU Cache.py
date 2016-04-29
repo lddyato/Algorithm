@@ -99,6 +99,36 @@ class LRUCache(object):
             self.linkedList.advance(self.record[key])
 
 
+'============================================================'
+
+import collections
+
+
+class LRUCache(object):
+    '''算法思路：
+
+    利用 collections.OrderedDict, 需要注意的一点是，get 的时候也需要更新 key 的位置
+    '''
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.queue = collections.OrderedDict()
+
+    def get(self, key):
+        if key not in self.queue:
+            return -1
+
+        self.queue[key] = self.queue.pop(key)
+        return self.queue[key]
+
+    def set(self, key, value):
+        self.queue.pop(key, None)
+        self.queue[key] = value
+
+        if len(self.queue) > self.capacity:
+            self.queue.popitem(last=False)
+
+
+
 l = LRUCache(2)
 get = l.get
 set = l.set

@@ -35,8 +35,13 @@ class TrieNode(object):
 
 
 class Trie(object):
-    def __init__(self):
+    def __init__(self, words):
         self.root = TrieNode()
+        self.build(words)
+
+    def build(self, words):
+        for word in words:
+            self.insert(word)
 
     def insert(self, word):
         root = self.root
@@ -50,37 +55,27 @@ class Solution(object):
 
     Trie + DFS
     '''
-    def search(self, i, j, root, board, m, n, r):
-        char = board[i][j]
-        if not (char and char in root.children):
-            return
-
-        board[i][j], root = None, root.children[char]
-
+    def dfs(self, board, i, j, m, n, root):
         if root.word:
-            r.append(root.word)
+            self.r.append(''.join(root.word))
             root.word = None
 
-        for x, y in ((0, -1), (-1, 0), (0, 1), (1, 0)):
+        char, board[i][j] = board[i][j], None
+        for x, y in ((0, 1), (-1, 0), (0, -1), (1, 0)):
             ii, jj = i + x, j + y
-            if 0 <= ii < m and 0 <= jj < n:
-                self.search(ii, jj, root, board, m, n, r)
-
+            if 0 <= ii < m and 0 <= jj < n and board[ii][jj] in root.children:
+                self.dfs(board, ii, jj, m, n, root.children[board[ii][jj]])
         board[i][j] = char
 
     def findWords(self, board, words):
-        if not board:
-            return []
-
-        tree = Trie()
-        [tree.insert(word) for word in words]
-
-        m, n, r = len(board), len(board[0]), []
+        self.r, trie = [], Trie(words)
+        m, n = map(len, (board, board[0]))
 
         for i, row in enumerate(board):
             for j, char in enumerate(row):
-                self.search(i, j, tree.root, board, m, n, r)
-        return r
+                if char in trie.root.children:
+                    self.dfs(board, i, j, m, n, trie.root.children[char])
+        return self.r
 
 
 board = map(list, ["aaaa", "aaaa","aaaa"])
