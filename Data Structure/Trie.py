@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 '''
-Trie
-====
+Trie 树
+======
 
 字典树：https://en.wikipedia.org/wiki/Trie
 '''

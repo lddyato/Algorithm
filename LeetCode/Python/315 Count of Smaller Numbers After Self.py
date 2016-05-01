@@ -22,6 +22,78 @@ Return the array [2, 1, 1, 0].
 
 
 class SegmentTreeNode(object):
+    def __init__(self, start, end):
+        self.start = start
+        self.end = end
+        self.left = None
+        self.right = None
+        self.count = 0
+
+
+class SegmentTree(object):
+    def __init__(self, start, end):
+        self.root = self.build(start, end)
+
+    def build(self, start, end):
+        root = SegmentTreeNode(start, end)
+        if start == end:
+            return root
+
+        mid = start + end >> 1
+        root.left = self.build(start, mid)
+        root.right = self.build(mid + 1, end)
+
+        return root
+
+    def insert(self, root, val):
+        if not root or val < root.start or val > root.end:
+            return
+
+        if root.start == root.end == val:
+            root.count += 1
+            return
+
+        if val <= (root.start + root.end) >> 1:
+            self.insert(root.left, val)
+        else:
+            self.insert(root.right, val)
+
+        root.count = root.left.count + root.right.count
+
+    def query(self, root, start, end):
+        if end < root.start or start > root.end:
+            return 0
+
+        if start <= root.start and end >= root.end:
+            return root.count
+
+        return self.query(root.left, start, end) + self.query(
+            root.right, start, end)
+
+
+class Solution(object):
+    '''算法思路：
+
+    线段树，以 nums 的极值作为边界点
+    '''
+    def countSmaller(self, nums):
+        if not nums:
+            return []
+
+        minVal, maxVal, n = min(nums), max(nums), len(nums)
+
+        tree, counts = SegmentTree(minVal, maxVal), [0] * n
+        for i in xrange(n - 1, -1, -1):
+            counts[i] = tree.query(tree.root, minVal, nums[i] - 1)
+            tree.insert(tree.root, nums[i])
+
+        return counts
+
+
+'========================================================='
+
+
+class SegmentTreeNode(object):
     def __init__(self, val, start, end):
         self.val = val
         self.start = start

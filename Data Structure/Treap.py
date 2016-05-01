@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 '''
-Treap
-=====
+Treap 树堆
+=========
 
 树堆：https://en.wikipedia.org/wiki/Treap
 '''
