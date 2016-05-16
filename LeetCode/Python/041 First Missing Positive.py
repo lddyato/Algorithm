@@ -33,24 +33,21 @@ class Solution(object):
     '''算法思路：
 
     观察到一个现象，first 一定在 [1, len(nums) + 1] 之间，因为 nums 最多占据前
-    len(nums) 个正整数
+    len(nums) 个正整数，由于每个 num 最多被访问 2 次，因此时间为 O(n)
+
+    Time: O(n)
+    Space: O(1)
     '''
     def firstMissingPositive(self, nums):
         n = len(nums)
-        for i in xrange(n):
-            cursor = nums[i]
-            while cursor is not True and 1 <= cursor <= n:
-                if nums[cursor - 1] is True:
-                    break
+        for i, num in enumerate(nums):
+            while (num is not None and 1 <= num <= n and
+                    nums[num - 1] is not None):
+                nums[num - 1], num = None, nums[num - 1]
 
-                next = nums[cursor - 1]
-                nums[cursor - 1] = True
-                cursor = next
-
-        for i, v in enumerate(nums):
-            if v is not True:
-                return i + 1
-
+        for i, num in enumerate(nums, 1):
+            if num is not None:
+                return i
         return n + 1
 
 

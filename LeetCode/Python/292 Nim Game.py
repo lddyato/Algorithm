@@ -27,3 +27,4 @@ class Solution(object):
 
 s = Solution()
 print s.canWinNim(1)
+

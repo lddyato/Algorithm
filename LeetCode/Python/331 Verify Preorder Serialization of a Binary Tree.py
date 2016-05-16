@@ -46,28 +46,23 @@ Return false
 class Solution(object):
     '''算法思路：
 
-    不能重建二叉树，联想到我们遍历二叉树的时候会使用 stack，所以考虑用栈，首先排除边界
-    条件：开头为 '#' 的和结尾不为 '#'的，然后遍历 preorder 每逢碰到 '#'，从栈 pop，
-    最后判断 stack 是否为空即可
+    不能重建二叉树，联想到我们遍历二叉树的时候会使用 stack，所以考虑用栈，首先
+    排除边界条件：开头为 '#' 的和结尾不为 '#'的，然后遍历 preorder 每逢碰到
+    '#'，从栈 pop，最后判断 stack 是否为空即可
     '''
     def isValidSerialization(self, preorder):
-        preorder = preorder.split(',')
+        preorder, stack = preorder.split(','), []
 
-        if preorder[0] == '#' and len(preorder) > 1 or preorder[-1] != '#':
-            return False
+        for i, item in enumerate(preorder, 1):
+            if item != '#':
+                stack.append(item)
+                continue
 
-        preorder = preorder[:-1]
-        stack = preorder[:1]
+            if not stack:
+                return i == len(preorder)
 
-        for i in xrange(1, len(preorder)):
-            if preorder[i] == '#':
-                if not stack:
-                    return False
-                stack.pop()
-            else:
-                stack.append(preorder[i])
-
-        return not stack
+            stack.pop()
+        return False
 
 
 s = Solution()

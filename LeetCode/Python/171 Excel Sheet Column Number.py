@@ -23,11 +23,10 @@ For example:
 
 class Solution(object):
     def titleToNumber(self, s):
-        i, base, r = len(s) - 1, 1, 0
-        while i >= 0:
-            r += base * (ord(s[i]) - 64)
-            base *= 26
-            i -= 1
+        base, r = 1, 0
+        for char in s[::-1]:
+           r += (ord(char) - 64) * base
+           base *= 26
         return r
 
 

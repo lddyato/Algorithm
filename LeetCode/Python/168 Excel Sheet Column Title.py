@@ -22,18 +22,15 @@ For example:
 class Solution(object):
     '''算法思路：
 
-    10 进制转换为 26 进制
+    10 进制转换为 26 进制, 不过需要做一下修改
     '''
     def convertToTitle(self, n):
-        result = []
+        r = []
         while n:
             n, mod = divmod(n, 26)
-            if mod:
-                result.append(chr(64 + mod))
-            else:
-                n -= 1
-                result.append('Z')
-        return ''.join(result[::-1])
+            r.append(chr(64 + (mod if mod else 26)))
+            n -= mod == 0
+        return ''.join(r[::-1])
 
 
 s = Solution()

@@ -126,7 +126,7 @@ class Treap(object):
 class Solution(object):
     '''算法思路：
 
-    平衡二叉搜索树，这里用 Treap实现，每次统计位于 [lower, upper] 中的和的个数
+    平衡二叉搜索树，这里用 Treap 实现，每次统计位于 [lower, upper] 中的和的个数
     '''
     def countRangeSum(self, nums, lower, upper):
         tree = Treap()

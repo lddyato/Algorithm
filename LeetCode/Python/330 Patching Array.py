@@ -34,26 +34,26 @@ Return 0.
 
 
 class Solution(object):
-    '''算法思路：
+    """算法思路：
 
-    miss 表示区间 [1, miss) 右边缘，当我们便利访问 nums 到 nums[i] 时，如果
-    nums[i] <= miss，则从 [1, miss - 1] 我们加一个遍 nums[i]，能够到达的最右侧为
-    miss - 1 + nums[i]，则我们期望达到的下一个值为 miss + nums[i]，一直这样直到
-    miss > n.
+    maxReach 表示当前能够达到的最大值，每一步一定要尽可能地使maxReach更大,
+    当 nums[i] > maxReach + 1 的时候，maxReach + 1 就会缺失，因为我们可以补上
+    maxReach + 1, 这样 maxReach = maxReach * 2 + 1, 否则 maxReach += nums[i]
 
-    参考了：https://leetcode.com/discuss/82822/solution-explanation
-    '''
+    参考了：https://leetcode.com/discuss/102653/c-8ms-greedy-solution-with-explanation
+    """
+
     def minPatches(self, nums, n):
-        miss, r, i, m = 1, 0, 0, len(nums)
-        while miss <= n:
-            if i < m and nums[i] <= miss:
-                miss += nums[i]
+        maxReach, r, i = 0, 0, 0
+        while maxReach < n:
+            if i < len(nums) and nums[i] <= maxReach + 1:
+                maxReach += nums[i]
                 i += 1
             else:
-                miss += miss
+                maxReach += maxReach + 1
                 r += 1
         return r
 
 
 s = Solution()
-print s.minPatches([], 8)
+t print s.minPatches([], 8)
