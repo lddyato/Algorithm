@@ -39,5 +39,6 @@ class Solution(object):
                 high = mid - 1
         return -1
 
+
 s = Solution()
 print s.search([4, 5, 6, 7, 8, 0, 1, 2, 3], 1)
