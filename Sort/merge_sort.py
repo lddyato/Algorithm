@@ -33,5 +33,38 @@ def merge_sort(array):
     return merge(*map(merge_sort, (array[:mid], array[mid:])))
 
 
-a = [23, 4, 5, 1, 345, 89, 7]
-print merge_sort(a)
+"===================================================================="
+
+
+def merge_sort(array):
+    """算法思路：
+
+    自底向上的写法, in replace
+    """
+    half, n = 1, len(array)
+
+    while half < n:
+        for start in xrange(0, n, half << 1):
+            end = min(start + (half << 1) - 1, n - 1)
+            i, j = start, start + half
+
+            while i < j and j <= end:
+                if array[i] < array[j]:
+                    i += 1
+                else:
+                    num = array[j]
+                    array[i + 1:j + 1] = array[i:j]
+                    array[i] = num
+
+                    i += 1
+                    j += 1
+        half <<= 1
+
+    return array
+
+
+import random
+
+for _ in range(10):
+    l = [random.randint(0, 100) for _ in xrange(random.randint(0, 100))]
+    assert merge_sort(l) == sorted(l)
