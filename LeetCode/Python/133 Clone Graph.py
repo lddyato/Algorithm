@@ -35,6 +35,15 @@ Visually, the graph looks like the following:
 '''
 
 
+class UndirectedGraphNode(object):
+    def __init__(self, x):
+        self.label = x
+        self.neighbors = []
+
+
+import collections
+
+
 class Solution(object):
     '''算法思路：
 
@@ -45,20 +54,39 @@ class Solution(object):
         if not node:
             return
 
-        graph = UndirectedGraphNode(node.label)
-        visited, record, queue = {graph.label}, {graph.label: graph}, [node]
+        record = {node.label: UndirectedGraphNode(node.label)}
+        queue = collections.deque([node])
 
-        cloneNode = lambda label: record.setdefault(
-            label, UndirectedGraphNode(label))
-
-        for root in queue:
-            clonedRoot = cloneNode(root.label)
-
-            for neighbor in root.neighbors:
-                clonedRoot.neighbors.append(cloneNode(neighbor.label))
-
-                if neighbor.label not in visited:
+        while queue:
+            item = queue.popleft()
+            for neighbor in item.neighbors:
+                if neighbor.label not in record:
+                    record[neighbor.label] = UndirectedGraphNode(neighbor.label)
                     queue.append(neighbor)
-                    visited.add(neighbor.label)
 
-        return graph
+                record[item.label].neighbors.append(record[neighbor.label])
+
+        return record[node.label]
+
+
+class Solution(object):
+    """算法思路：
+
+    同上，不过这次是用DFS
+    """
+    def dfs(self, node):
+        if node.label in self.record:
+            return self.record[node.label]
+
+        self.record[node.label] = UndirectedGraphNode(node.label)
+        for enighbor in node.neighbors:
+            self.record[node.label].neighbors.append(self.dfs(enighbor))
+
+        return self.record[node.label]
+
+    def cloneGraph(self, node):
+        if not node:
+            return
+
+        self.record = {}
+        return self.dfs(node)

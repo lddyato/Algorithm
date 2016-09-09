@@ -23,14 +23,16 @@ return true, as there exist a root-to-leaf path 5->4->11->2 which sum is 22.
 class Solution(object):
     '''算法思路：
 
-    递归
+    递归求解
     '''
     def hasPathSum(self, root, sum):
         if not root:
             return False
 
-        if not root.left and not root.right:
-            return sum == root.val
+        sum -= root.val
 
-        subtree = lambda s: s and self.hasPathSum(s, sum - root.val) or False
-        return subtree(root.left) or subtree(root.right)
+        if not (root.left or root.right or sum):
+            return True
+
+        return self.hasPathSum(
+            root.left, sum) or self.hasPathSum(root.right, sum)

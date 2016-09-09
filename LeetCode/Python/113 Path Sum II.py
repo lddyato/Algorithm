@@ -28,26 +28,27 @@ return
 
 
 class Solution(object):
-    '''算法思路：
+    """算法思路：
 
-    递归遍历即可
-    '''
-    def dfs(self, root, sum_):
+    DFS递归遍历
+    """
+    def dfs(self, root, sum, path):
         if not root:
-            return []
+            return
 
-        if not (root.left or root.right):
-            return [[root.val]] if root.val == sum_ else []
+        sum -= root.val
 
-        return [
-            [root.val] + p for p in sum([
-                self.dfs(c, sum_ - root.val)
-                for c in (root.left, root.right)
-            ], [])
-        ]
+        if not (root.left or root.right or sum):
+            self.r.append(path + [root.val])
+            return
 
-    def pathSum(self, root, sum_):
-        return self.dfs(root, sum_)
+        self.dfs(root.left, sum, path + [root.val])
+        self.dfs(root.right, sum, path + [root.val])
+
+    def pathSum(self, root, sum):
+        self.r = []
+        self.dfs(root, sum, [])
+        return self.r
 
 
 class TreeNode(object):
