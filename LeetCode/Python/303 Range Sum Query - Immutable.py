@@ -25,10 +25,9 @@ class NumArray(object):
     计算前缀和
     '''
     def __init__(self, nums):
-        sums = [0]
-        [sums.append(num + sums[-1]) for num in nums]
-
-        self.sums = sums
+        self.sums = [0] * (len(nums) + 1)
+        for i, num in enumerate(nums, 1):
+            self.sums[i] = self.sums[i - 1] + num
 
     def sumRange(self, i, j):
         return self.sums[j + 1] - self.sums[i]
@@ -97,7 +96,7 @@ class SegmentTreeNode(object):
 class NumArray(object):
     '''算法思路：
 
-    线段树，使用链表实现
+    线段树，使用树实现
     '''
     def __init__(self, nums):
         self.nums = nums

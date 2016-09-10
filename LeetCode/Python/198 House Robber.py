@@ -21,7 +21,7 @@ class Solution(object):
 
     DP
 
-    设 f(n) 为从 index 为 n 往后的最大和，则递推公式：
+    设 f(n) 为从 index=n 往后的最大和，则递推公式：
 
     f(n) = max(num[n] + f(n + 2), f(n + 1))
 
@@ -103,7 +103,8 @@ class Solution(object):
 class Solution(object):
     '''算法思路：
 
-    观察递推公式可得到，其实我们只需要两个变量 f(n-1)，f(n-2) 即可，可以不用数组来保存
+    观察递推公式可得到，其实我们只需要两个变量 f(n-1)，f(n-2) 即可,
+    可以不用数组来保存
     '''
     def rob(self, nums):
         fn_1 = fn_2 = 0
