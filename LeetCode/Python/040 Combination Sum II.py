@@ -45,7 +45,7 @@ class Solution(object):
                 r.add((num,))
                 break
 
-            left = self.search(candidates[i+1:], target - num)
+            left = self.search(candidates[i + 1:], target - num)
 
             if left:
                 r |= set(tuple([num] + p) for p in left)

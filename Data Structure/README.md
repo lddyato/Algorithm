@@ -8,3 +8,7 @@ Data Structure
 - [RedBlack-Tree（红黑树）](./RedBlackTree.py)
 - [Segment Tree（线段树）](./SegmentTree.py)
 - [BinaryIndexedTree（树状数组）](./BinaryIndexedTree.py)
+- Graph
+  - [Dijkstra（单源最短路径）](./graph/dijkstra.py)
+  - [Floyd（多源最短路径）](./graph/floyd.py)
+  - [Prim（最小生成树算法）](./graph/prim.py)

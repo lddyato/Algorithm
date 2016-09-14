@@ -31,14 +31,15 @@ class Solution(object):
     '''
     def jump(self, nums):
         n = len(nums)
-        dp, MAX = [0] * n, float('inf')
+        steps = [0] * n
 
         for i in xrange(n - 2, -1, -1):
-            dp[i] = min(
-                [dp[i + j] for j in xrange(1, nums[i] + 1) if i + j < n] or
-                [MAX]) + 1
+            steps[i] = min([
+                1 + steps[min(i + step, n - 1)]
+                for step in xrange(1, nums[i] + 1)
+            ] or [float("inf")])
 
-        return dp[0]
+        return steps[0]
 
 
 class Solution(object):
@@ -58,4 +59,4 @@ class Solution(object):
 
 
 s = Solution()
-print s.jump([7,0,9,6,9,6,1,7,9,0,1,2,9,0,3])
+print s.jump([1, 2, 3])

@@ -22,35 +22,64 @@ corresponding outputs are in the right-hand column.
 
 
 class Solution(object):
-    '''算法思路：
+    """算法思路：
 
-    从后向前，找到第一个 后边的数比紧挨着它的前面的数大的 数，然后交换 该数前一位 和
-    该数后(算上该数)比该数大的最小值，最后对于该数及后面的值交换排序.
-    '''
-    def nextPermutation(self, nums):
-        if len(nums) < 2:
-            return
+    首先我们要找Next Permutation具有什么样的特征。Next肯定要比当前序列大，我们
+    要从后往前对每一个字符，找到它后边是否有比它大的，如果有，找出比他大的序列
+    中最小的那个，然后置换，最后对其后边的元素反转。
 
-        i = len(nums) - 1
+    有一个特性，该字符后边的序列是递减序列。
 
-        while i > 0 and nums[i] <= nums[i - 1]:
-            i -= 1
+    例如: 2 8 1 6 9 8 7 2
 
-        if i == 0:
-            nums.sort()
-            return
+    从后往前遍历，到6这个数字的时候，7、8、9都比6大，我们要找出比6大的序列中
+    最小的那个，这里是7，然后把6和7置换，变成了
 
-        j = i
-        while j < len(nums) and nums[j] > nums[i - 1]:
-            j += 1
+    2 8 1 7 9 8 6 2
 
-        nums[i - 1], nums[j - 1] = nums[j - 1], nums[i - 1]
+    然后再把7后边的这个递减序列反转，变成
 
-        low, high = i, len(nums) - 1
+    2 8 1 7 2 6 8 9
+
+    这样就能保证是比原序列大的最小的那个
+    """
+    def search(self, nums, start, end, target):
+        # binary search to get the index which is the smallest one larger than
+        # target
+        low, high = start, end
+        while low <= high:
+            mid = low + high >> 1
+            if nums[mid] <= target:
+                high = mid - 1
+            else:
+                if mid == end or nums[mid + 1] <= target:
+                    return mid
+                low = mid + 1
+
+    def reverse(self, nums, start, end):
+        # reverse the nums[start:end + 1] in place
+        low, high = start, end
         while low < high:
             nums[low], nums[high] = nums[high], nums[low]
             low += 1
             high -= 1
+
+    def nextPermutation(self, nums):
+        n = len(nums)
+        if n <= 1:
+            return
+
+        i = n - 2
+        while i >= 0:
+            if nums[i] < nums[i + 1]:
+                break
+            i -= 1
+
+        if i >= 0:
+            x = self.search(nums, i + 1, n - 1, nums[i])
+            nums[i], nums[x] = nums[x], nums[i]
+
+        self.reverse(nums, i + 1, n - 1)
 
 
 s = Solution()

@@ -25,27 +25,30 @@ Example 2:
 
 
 class Solution(object):
-    def search2(self, candidates, target):
-        r, record = [], {}
-        for num in candidates:
-            if target - num in record:
-                r.append([min(num, target - num), max(num, target - num)])
-            record[num] = True
-        return r
+    """算法思路：
 
-    def search(self, candidates, target, k):
-        return self.search2(candidates, target) if k == 2 else sum([[[num] + p
-            for p in self.search(candidates[i+1:], target - num, k - 1)]
-            for i, num in enumerate(candidates)], [])
-
-    def combinationSum3(self, k, n):
-        if k < 1:
+    增加了个数的限制
+    """
+    def search(self, k, target, start):
+        if k <= 0 or start > 9:
             return []
 
-        if k == 1:
-            return [n] if 1 <= n <= 9 else []
+        r = []
+        for i in xrange(start, 10):
+            if target == i:
+                if k == 1:
+                    r.append([i])
+                continue
 
-        return self.search(range(1, 10), n, k)
+            if i > target:
+                break
+
+            r += [[i] + path for path in self.search(k - 1, target - i, i + 1)]
+
+        return r
+
+    def combinationSum3(self, k, n):
+        return self.search(k, n, 1)
 
 
 s = Solution()
