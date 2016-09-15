@@ -48,6 +48,24 @@ class Solution(object):
                 self.rotateCircle(matrix, o, start_row, start_col)
 
 
+class Solution(object):
+    """算法思路：
+
+    先把matrix沿着对角线折叠互换，然后把每一行reverse
+    """
+    def rotate(self, matrix):
+        for x in xrange(len(matrix)):
+            for y in xrange(x):
+                matrix[x][y], matrix[y][x] = matrix[y][x], matrix[x][y]
+
+        for row in matrix:
+            low, high = 0, len(row) - 1
+            while low < high:
+                row[low], row[high] = row[high], row[low]
+                low += 1
+                high -= 1
+
+
 s = Solution()
 s.rotate([
     [1, 2, 3, 4],

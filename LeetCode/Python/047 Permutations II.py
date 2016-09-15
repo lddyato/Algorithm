@@ -28,7 +28,7 @@ class Solution(object):
             return (tuple(nums),)
 
         return list(set(sum([
-            tuple((v,) + p for p in self.permuteUnique(nums[:i] + nums[i+1:]))
+            tuple((v,) + p for p in self.permuteUnique(nums[:i] + nums[i + 1:]))
             for i, v in enumerate(nums)], ())))
 
 
@@ -40,24 +40,37 @@ class Solution(object):
     结果：Accepted
     '''
     def permuteUnique(self, nums):
-        exited = {}
+        record, r = set(), []
 
-        if not nums:
-            return nums
+        for i, num in enumerate(nums):
+            if num not in record:
+                record.add(num)
+                r += [
+                    [num] + path
+                    for path in self.permuteUnique(
+                        nums[:i] + nums[i + 1:]
+                    ) or [[]]
+                ]
 
-        if len(nums) == 1:
-            return [nums]
+        return r
 
-        result = []
-        for i, v in enumerate(nums):
-            if v not in exited:
-                result.append([
-                    [v] + p
-                    for p in self.permuteUnique(nums[:i] + nums[i+1:])
-                ])
-                exited[v] = 1
 
-        return sum(result, [])
+class Solution(object):
+    """算法思路：
+
+    同I，利用动态规划的思想，根据前n个序列，生成长度为n+1的序列
+    """
+    def permuteUnique(self, nums):
+        r = [[]]
+        for num in nums:
+            new_r = []
+            for path in r:
+                for i in xrange(len(path) + 1):
+                    new_r.append(path[:i] + [num] + path[i:])
+                    if i < len(path) and path[i] == num:
+                        break
+            r = new_r
+        return r
 
 
 s = Solution()

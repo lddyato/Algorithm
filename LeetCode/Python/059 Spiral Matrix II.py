@@ -47,5 +47,44 @@ class Solution(object):
         return matrix
 
 
+class Solution(object):
+    """算法思路：
+
+    同上，只不过是另外一种写法
+    """
+    def generate(self, x, y, w, start, board):
+        i, j = 0, 0
+        for j in xrange(w):
+            board[x + i][y + j] = start
+            start += 1
+
+        for i in xrange(1, w):
+            board[x + i][y + j] = start
+            start += 1
+
+        if w > 1:
+            for j in xrange(w - 2, -1, -1):
+                board[x + i][y + j] = start
+                start += 1
+
+            for i in xrange(w - 2, 0, -1):
+                board[x + i][y + j] = start
+                start += 1
+
+        return start
+
+    def generateMatrix(self, n):
+        board = [[0] * n for _ in xrange(n)]
+
+        x, y, start = 0, 0, 1
+        while n > 0:
+            start = self.generate(x, y, n, start, board)
+            x += 1
+            y += 1
+            n -= 2
+
+        return board
+
+
 s = Solution()
 print s.generateMatrix(3)

@@ -100,5 +100,35 @@ class Solution(object):
         return ''.join(map(str, result))
 
 
+import math
+
+
+class Solution(object):
+    """算法思路：
+
+    同上，只不过是另外一种写法
+    """
+    def getPermutation(self, n, k):
+        r, token = [], [False] * n
+
+        for i in xrange(n - 1, -1, -1):
+            div = max(k - 1, 0) / math.factorial(i)
+            k -= div * math.factorial(i)
+
+            cnt = 0
+            for j, t in enumerate(token, 1):
+                if t:
+                    continue
+
+                if cnt == div:
+                    r.append(j)
+                    token[j - 1] = True
+                    break
+
+                cnt += 1
+
+        return ''.join(map(str, r))
+
+
 s = Solution()
 s.getPermutation(4, 11)
