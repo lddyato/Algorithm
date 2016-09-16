@@ -44,25 +44,27 @@ class Solution(object):
     拓扑排序，kahn 算法
     '''
     def findOrder(self, numCourses, prerequisites):
-        graph, v, r = collections.defaultdict(set), [0] * numCourses, []
+        graph = collections.defaultdict(lambda: collections.defaultdict(int))
+        v = {i: 0 for i in xrange(numCourses)}
 
-        for to, start in prerequisites:
-            if to not in graph[start]:
-                graph[start].add(to)
-                v[to] += 1
+        for to, from_ in prerequisites:
+            graph[from_][to] += 1
+            v[to] += 1
 
-        stack = collections.deque(i for i, val in enumerate(v) if not val)
-        while stack:
-            top = stack.popleft()
-            r.append(top)
+        path = []
+        queue = collections.deque([key for key, val in v.items() if val == 0])
+        while queue:
+            vertex = queue.popleft()
+            path.append(vertex)
 
-            for node in graph[top]:
-                v[node] -= 1
-                if not v[node]:
-                    stack.append(node)
-            del graph[top]
+            for to in graph[vertex]:
+                v[to] -= graph[vertex][to]
+                if v[to] == 0:
+                    queue.append(to)
 
-        return r if not graph else []
+            del graph[vertex]
+
+        return [] if graph else path
 
 
 s = Solution()

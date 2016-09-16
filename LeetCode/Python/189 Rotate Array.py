@@ -99,25 +99,18 @@ class Solution(object):
 
     结果：AC
     '''
-    def reverse(self, nums, start, end):
-        while start < end:
-            nums[start], nums[end] = nums[end], nums[start]
-            start += 1
-            end -= 1
+    def rotate_part(self, nums, low, high):
+        while low < high:
+            nums[low], nums[high] = nums[high], nums[low]
+            low += 1
+            high -= 1
 
     def rotate(self, nums, k):
-        if not nums:
-            return
+        n, k = len(nums), k % len(nums)
 
-        if k <= 0:
-            return
-
-        n = len(nums)
-        k %= n
-
-        self.reverse(nums, 0, n - k - 1)
-        self.reverse(nums, n - k, n - 1)
-        self.reverse(nums, 0, n - 1)
+        self.rotate_part(nums, 0, n - k - 1)
+        self.rotate_part(nums, n - k, n - 1)
+        self.rotate_part(nums, 0, n - 1)
 
 
 s = Solution()

@@ -26,17 +26,22 @@ class Solution(object):
 
     暴力递归
     '''
-    def _gen_combine(self, nums, steps):
-        if steps == 1:
-            return [[n] for n in nums]
+    def search(self, nums, k):
+        if k == 1:
+            return [[num] for num in nums]
 
-        return sum([
-            [[v] + p for p in self._gen_combine(nums[i+1:], steps-1)]
-            for i, v in enumerate(nums)
-        ], [])
+        r = []
+        for i, num in enumerate(nums):
+            left = nums[i + 1:]
+            if len(left) < k - 1:
+                break
+
+            r += [[num] + path for path in self.search(left, k - 1)]
+
+        return r
 
     def combine(self, n, k):
-        return self._gen_combine(range(1, n + 1), k)
+        return self.search(range(1, n + 1), k)
 
 
 s = Solution()
