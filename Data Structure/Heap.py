@@ -27,9 +27,10 @@ class _Heap(object):
             if son + 1 < end and self._compare(heap[son + 1], heap[son]):
                 son += 1
 
-            if self._compare(heap[son], heap[father]):
-                heap[son], heap[father] = heap[father], heap[son]
+            if not self._compare(heap[son], heap[father]):
+                break
 
+            heap[son], heap[father] = heap[father], heap[son]
             father = son
 
     def build(self):
@@ -44,7 +45,9 @@ class _Heap(object):
             father = (son - 1) >> 1
             if father < 0 or not self._compare(heap[son], heap[father]):
                 break
+
             heap[son], heap[father] = heap[father], heap[son]
+            son = father
 
     def pop(self):
         top, tail = self.heap[0], self.heap.pop()
@@ -69,8 +72,8 @@ class _Heap(object):
 
 
 class MinHeap(_Heap):
-    _compare = operator.lt
+    _compare = operator.le
 
 
 class MaxHeap(_Heap):
-    _compare = operator.gt
+    _compare = operator.ge
