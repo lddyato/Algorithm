@@ -54,5 +54,25 @@ class Solution(object):
         return pointer
 
 
+class Solution(object):
+    '''算法思路：
+
+    同样不需改变数组长度，交换式
+    '''
+    def removeDuplicates(self, nums):
+        n = len(nums)
+
+        if n < 2:
+            return n
+
+        low, high = 0, 0
+        while high < n:
+            if nums[high] != nums[low]:
+                low += 1
+                nums[low], nums[high] = nums[high], nums[low]
+            high += 1
+        return low + 1
+
+
 s = Solution()
 print s.removeDuplicates([1, 1, 2])

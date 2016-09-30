@@ -50,5 +50,33 @@ class Solution(object):
         return r
 
 
+class Solution(object):
+    """算法思路：
+
+    双指针，swap
+    """
+    def set(self, n, bit, index):
+        if bit:
+            n |= 1 << index
+        else:
+            n &= ~(1 << index)
+
+        return n
+
+    def reverseBits(self, n):
+        low, high = 0, 31
+        while low < high:
+            bitLow, bitHigh = (n >> low) & 1, (n >> high) & 1
+            n = self.set(self.set(n, bitLow, high), bitHigh, low)
+            low += 1
+            high -= 1
+        return n
+
+
+class Solution(object):
+    def reverseBits(self, n):
+        return int(format(n, 'b').zfill(32)[::-1], 2)
+
+
 s = Solution()
 print s.reverseBits(1)

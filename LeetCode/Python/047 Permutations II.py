@@ -39,20 +39,22 @@ class Solution(object):
 
     结果：Accepted
     '''
-    def permuteUnique(self, nums):
+    def search(self, nums):
+        if len(nums) == 1:
+            return [nums]
+
         record, r = set(), []
-
         for i, num in enumerate(nums):
-            if num not in record:
-                record.add(num)
-                r += [
-                    [num] + path
-                    for path in self.permuteUnique(
-                        nums[:i] + nums[i + 1:]
-                    ) or [[]]
-                ]
-
+            if num in record:
+                continue
+            r += [[num] + path for path in self.search(nums[:i] + nums[i + 1:])]
+            record.add(num)
         return r
+
+    def permuteUnique(self, nums):
+        if not nums:
+            return []
+        return self.search(nums)
 
 
 class Solution(object):

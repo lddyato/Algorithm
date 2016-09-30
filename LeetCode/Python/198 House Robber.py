@@ -113,5 +113,17 @@ class Solution(object):
         return fn_1
 
 
+class Solution(object):
+    """算法思路：
+
+    同上，这里one代表n-2，two代表n-1, three代表n
+    """
+    def rob(self, nums):
+        one, two, three = 0, 0, 0
+        for num in nums:
+            one, two = two, three
+            three = max(num + one, two)
+        return three
+
 s = Solution()
 print s.rob([1, 7, 9, 2])

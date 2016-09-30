@@ -16,7 +16,7 @@ Given the following words in dictionary,
   "wrt",
   "wrf",
   "er",
-  "ett",
+ "ett",
   "rftt"
 ]
 

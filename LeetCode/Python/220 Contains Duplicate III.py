@@ -61,20 +61,17 @@ class Solution(object):
     https://leetcode.com/discuss/48670/o-n-python-using-buckets-with-explanation-10-lines
     '''
     def containsNearbyAlmostDuplicate(self, nums, k, t):
-        if t < 0 or k <= 0:
+        if k <= 0 or t < 0:
             return False
 
         buckets = {}
-        for i, v in enumerate(nums):
-            bucketNum = v / (t + 1)
-            for idx in xrange(bucketNum - 1, bucketNum + 2):
-                if idx in buckets and abs(buckets[idx] - v) <= t:
+        for i, num in enumerate(nums):
+            index = num / t if t else num
+            for item in (index - 1, index, index + 1):
+                if item in buckets and i - buckets[item] <= k and abs(
+                        num - nums[buckets[item]]) <= t:
                     return True
-
-            buckets[bucketNum] = v
-
-            if len(buckets) > k:
-                del buckets[nums[i - k] / (t + 1)]
+            buckets[index] = i
 
         return False
 
